@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eBook Series - RAJ YDV EDUCATION</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP HEADER BAR */
+  .top-bar {
+    background: #ffffff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f172a;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .back-btn:hover { background: #e2e8f0; }
+  .top-bar h2 { font-size: 19px; font-weight: 800; color: #0f172a; }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* GRADIENT EBOOK LIBRARY BANNER */
+  .ebook-banner {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    border-radius: 24px;
+    padding: 28px 24px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+  }
+  .ebook-banner h1 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .ebook-banner p {
+    font-size: 15px;
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  /* EBOOK CARDS */
+  .ebook-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+  .ebook-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+    border-color: #6495ed;
+  }
+  
+  .card-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .card-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  /* Unique Icon Backgrounds */
+  .icon-pdf { background: #fef2f2; border-color: #fee2e2; }
+  .icon-my { background: #f3e8ff; border-color: #e9d5ff; }
+  .icon-all { background: #e0f2fe; border-color: #bae6fd; }
+
+  .card-text h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 3px;
+  }
+  .card-text p {
+    font-size: 13.5px;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .card-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #64748b;
+    font-weight: bold;
+    border: 1px solid #e2e8f0;
+  }
+  .ebook-card:hover .card-arrow {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+  }
+
+  @media (max-width: 480px) {
+    .ebook-banner { padding: 22px 18px; }
+    .ebook-banner h1 { font-size: 22px; }
+    .ebook-card { padding: 14px 16px; }
+    .card-icon-box { width: 48px; height: 48px; font-size: 22px; }
+    .card-text h3 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR WITH BACK BUTTON -->
+<div class="top-bar">
+  <a href="dashboard.html" class="back-btn">←</a>
+  <h2>eBook Series</h2>
+</div>
+
+<!-- CONTAINER -->
+<div class="container">
+
+  <!-- GRADIENT EBOOK LIBRARY BANNER -->
+  <div class="ebook-banner">
+    <h1>eBook Library</h1>
+    <p>Pick what you want to read</p>
+  </div>
+
+  <!-- Free PDFs Card -->
+  <div class="ebook-card" onclick="openEbookSection('free-pdfs')">
+    <div class="card-left">
+      <div class="card-icon-box icon-pdf">📄</div>
+      <div class="card-text">
+        <h3>Free PDFs</h3>
+        <p>Open free study PDFs</p>
+      </div>
+    </div>
+    <div class="card-arrow">&gt;</div>
+  </div>
+
+  <!-- My eBooks Card -->
+  <div class="ebook-card" onclick="openEbookSection('my-ebooks')">
+    <div class="card-left">
+      <div class="card-icon-box icon-my">📖</div>
+      <div class="card-text">
+        <h3>My eBooks</h3>
+        <p>Your purchased eBooks</p>
+      </div>
+    </div>
+    <div class="card-arrow">&gt;</div>
+  </div>
+
+  
+</div>
+
+<script>
+function openEbookSection(section) {
+  if (section === 'free-pdfs') {
+    window.location.href = "free-pdfs.html";
+  } else if (section === 'my-ebooks' || section === 'MY-EBOOKS') {
+    window.location.href = "my-ebooks.html";
+  }
+}
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcements | RAJ YDV EDUCATION</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #f1f5f9; color: #1e293b; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; background: #123b75; color: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+    .back-btn { background: #ef4444; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .notice-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 5px solid #f59e0b; }
+    .notice-card h3 { color: #d97706; margin-bottom: 8px; font-size: 18px; }
+    .notice-card p { color: #475569; font-size: 14px; line-height: 1.5; }
+    .notice-class { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 8px; }
+    .no-data { text-align: center; color: #64748b; margin-top: 40px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-bar">
+        <h2>📢 Announcements & Notices</h2>
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">⬅️ Back</button>
+    </div>
+
+    <div id="noticeList">
+        <p class="no-data">Loading announcements from Firebase...</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+      authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+      projectId: "rajydveducation-b4ea4",
+      storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+      messagingSenderId: "737507088855",
+      appId: "1:737507088855:web:36026fbaba7d52c0285392",
+      measurementId: "G-CTZLNK16VF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let student = JSON.parse(localStorage.getItem("currentStudent"));
+    if (!student) {
+        alert("Please login first!");
+        window.location.href = "index.html";
+    }
+
+    async function loadAnnouncements() {
+        const noticeList = document.getElementById("noticeList");
+        noticeList.innerHTML = "";
+
+        try {
+            const q = query(collection(db, "announcements"));
+            const snap = await getDocs(q);
+            let count = 0;
+
+            snap.forEach(d => {
+                const data = d.data();
+                // Match student's class or show if 'All Classes'
+                if (data.studentClass === student.studentClass || data.studentClass === "All Classes") {
+                    count++;
+                    const card = document.createElement("div");
+                    card.className = "notice-card";
+                    card.innerHTML = `
+                        <span class="notice-class">${data.studentClass || "All Classes"}</span>
+                        <h3>📢 ${data.title}</h3>
+                        <p>${data.message}</p>
+                    `;
+                    noticeList.appendChild(card);
+                }
+            });
+
+            if (count === 0) {
+                noticeList.innerHTML = `<p class="no-data">No announcements available for your class right now.</p>`;
+            }
+        } catch(err) {
+            console.error("Error loading notices:", err);
+            noticeList.innerHTML = `<p class="no-data">Failed to load announcements.</p>`;
+        }
+    }
+
+    loadAnnouncements();
+</script>
+
+</body>
+</html>

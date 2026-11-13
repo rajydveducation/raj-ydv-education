@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Class - RAJ YDV EDUCATION</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP HEADER BAR */
+  .top-bar {
+    background: #ffffff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f172a;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .back-btn:hover { background: #e2e8f0; }
+  .top-bar h2 { font-size: 19px; font-weight: 800; color: #0f172a; }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* TOP FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    color: #16a34a;
+  }
+  .filter-btn span { font-size: 16px; }
+
+  /* SUBJECT CARDS CONTAINER */
+  #classListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* SUBJECT FOLDER CARD */
+  .subject-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-left: 5px solid #38bdf8; /* Left accent border like screenshot */
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .subject-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.15);
+  }
+
+  .card-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .folder-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .card-info h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+  .item-badge {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0284c7;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .card-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-weight: bold;
+    border: 1px solid #cbd5e1;
+    transition: 0.2s;
+  }
+  .subject-card:hover .card-arrow {
+    background: #0284c7;
+    color: white;
+    border-color: #0284c7;
+  }
+
+  .loading-text {
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+    margin-top: 30px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="notes.html" class="back-btn">←</a>
+  <h2>My Class</h2>
+</div>
+
+<!-- CONTAINER -->
+<div class="container">
+
+  <!-- TOP FILTER TABS (Video, PDF, Test, Category) -->
+  <div class="filter-tabs">
+    <button class="filter-btn" onclick="filterType('video')"><span>▶</span> Video</button>
+    <button class="filter-btn" onclick="filterType('pdf')"><span>📄</span> PDF</button>
+    <button class="filter-btn" onclick="filterType('test')"><span>📖</span> Test</button>
+    <button class="filter-btn active" onclick="filterType('all')"><span>📁</span> Category</button>
+  </div>
+
+  <!-- SUBJECT FOLDERS LIST LOADED FROM FIREBASE -->
+  <div id="classListContainer">
+    <div class="loading-text">Loading classes from database...</div>
+  </div>
+
+</div>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+  authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+  projectId: "rajydveducation-b4ea4",
+  storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+  messagingSenderId: "737507088855",
+  appId: "1:737507088855:web:36026fbaba7d52c0285392",
+  measurementId: "G-CTZLNK16VF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Fetch Subjects/Categories from Firestore collection 'my_classes'
+window.addEventListener("DOMContentLoaded", () => {
+  loadClasses('all');
+});
+
+function loadClasses(filter) {
+  const container = document.getElementById("classListContainer");
+  container.innerHTML = `<div class="loading-text">Loading classes...</div>`;
+
+  db.collection("my_classes").get()
+    .then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        container.innerHTML = `<div class="loading-text">No classes found in database! Add 'my_classes' collection in Firestore.</div>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const item = doc.data();
+        
+        // Optional filtering if type matches
+        if(filter !== 'all' && item.type && item.type !== filter) return;
+
+        container.innerHTML += `
+          <div class="subject-card" onclick="openSubject('${item.subjectName}')">
+            <div class="card-left">
+              <div class="folder-icon-box">📁</div>
+              <div class="card-info">
+                <h3>${item.subjectName}</h3>
+                <span class="item-badge">${item.itemCount || '0'} items</span>
+              </div>
+            </div>
+            <div class="card-arrow">&gt;</div>
+          </div>
+        `;
+      });
+    })
+    .catch((error) => {
+      console.error("Error getting documents: ", error);
+      container.innerHTML = `<div class="loading-text" style="color: #dc2626;">Failed to load classes. Please check connection.</div>`;
+    });
+}
+
+function filterType(type) {
+  // Highlight active tab
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  
+  loadClasses(type);
+}
+
+function openSubject(subjectName) {
+  alert("Opening Subject: " + subjectName);
+  // Yahan tu chahe to subject ke andar ke chapters ya videos ka page khol sakta hai
+}
+</script>
+
+</body>
+</html>

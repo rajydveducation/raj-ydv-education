@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAJ YDV EDUCATION - Login & Register</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(135deg,#e8f3ff 0%,#f4f8ff 50%,#e2effe 100%);
+    min-height:100vh;
+}
+.card-shadow{
+    box-shadow:0 15px 35px -5px rgba(0,110,255,.08),0 5px 15px rgba(0,0,0,.04);
+}
+.avatar-glow{
+    box-shadow:0 0 25px rgba(59,130,246,.25);
+}
+@keyframes spin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+.animate-spin-slow{animation:spin 20s linear infinite}
+.custom-input{transition:all .2s ease-in-out}
+.custom-input:focus-within{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+</style>
+</head>
+
+<body class="flex flex-col items-center justify-start py-6 px-4 sm:px-6 md:py-10 relative">
+
+<div class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md border border-blue-100 text-xs sm:text-sm font-semibold text-blue-900 flex items-center space-x-2 z-20">
+    <i class="fa-solid fa-clock text-blue-600"></i>
+    <span id="liveDateTime">Loading...</span>
+</div>
+
+<div class="relative mb-4 mt-6 sm:mt-0 flex flex-col items-center">
+    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-b from-blue-400 to-indigo-100 avatar-glow flex items-center justify-center relative">
+        <svg class="absolute inset-0 w-full h-full animate-spin-slow pointer-events-none" viewBox="0 0 100 100">
+            <path id="textPath" d="M 15,50 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" stroke="transparent"/>
+            <text class="text-[8.5px] font-bold uppercase tracking-widest fill-blue-900" style="letter-spacing:2.2px">
+                <textPath href="#textPath" startOffset="0%">RAJ YDV EDUCATION &bull; </textPath>
+            </text>
+        </svg>
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-white border-2 border-white flex items-center justify-center shadow-inner">
+            <img id="educatorLogo" src="logo.png" alt="Raj Ydv Education" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0066ff/ffffff?text=RYE'">
+        </div>
+    </div>
+</div>
+
+<div class="w-full max-w-md bg-white rounded-[2rem] card-shadow p-6 sm:p-8 transition-all duration-300">
+
+<!-- LOGIN VIEW -->
+<div id="loginView" class="space-y-6">
+    <div class="text-center space-y-1">
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Welcome back</h1>
+        <p class="text-sm text-slate-500 font-medium">Sign in to continue to Portal</p>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)" novalidate class="space-y-4">
+
+        <div class="relative">
+            <div id="phoneBox" class="custom-input flex items-center px-4 py-3.5 rounded-2xl border border-slate-200 bg-white">
+                <span class="text-blue-600 mr-3 text-lg"><i class="fa-solid fa-user"></i></span>
+                <input type="text" id="loginPhone" maxlength="40"
+                oninput="let val=this.value;if(!val.includes('@') && /^\d+$/.test(val)){this.value=val.slice(0,10)}"
+                placeholder="10-digit Mobile or Email"
+                class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm sm:text-base">
+            </div>
+        </div>
+
+        <div class="relative">
+            <div id="passBox" class="custom-input flex items-center px-4 py-3.5 rounded-2xl border border-slate-200 bg-white">
+                <span class="text-blue-600 mr-3 text-lg"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" id="loginPassword" placeholder="Type Your Password"
+                class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm sm:text-base">
+                <button type="button" onclick="togglePassword('loginPassword','eyeIconLogin')" class="text-slate-400 hover:text-blue-600 focus:outline-none p-1">
+                    <i id="eyeIconLogin" class="fa-solid fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs sm:text-sm pt-2 px-1">
+            <a href="#" onclick="openForgotModal(event)" class="text-blue-600 font-semibold hover:underline">Forgot password?</a>
+            <span class="text-slate-400 font-medium">Secure login</span>
+        </div>
+
+        <div class="space-y-3 pt-2">
+            <button type="submit" id="loginButton" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold text-base shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all">
+                LOG IN
+            </button>
+            <button type="button" onclick="switchView('register')" class="w-full py-4 rounded-2xl bg-white border-2 border-blue-600/20 hover:border-blue-600 text-blue-600 font-bold text-base active:scale-[0.98] transition-all">
+                CREATE ACCOUNT
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- REGISTRATION VIEW -->
+<div id="registerView" class="space-y-5 hidden">
+    <div class="text-center space-y-1">
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Create account</h1>
+        <p class="text-sm text-slate-500 font-medium">Join Raj Ydv Education Today</p>
+    </div>
+
+    <form id="registerForm" onsubmit="initiateRegistrationOTP(event)" class="space-y-3.5">
+
+        <div class="custom-input flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-user"></i></span>
+            <input type="text" id="regName" placeholder="Full name" class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm" required>
+        </div>
+
+        <div class="custom-input flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-phone"></i></span>
+            <div class="flex items-center space-x-2 pr-3 border-r border-slate-200 mr-3">
+                <span class="text-lg">🇮🇳</span>
+                <span class="text-sm font-semibold text-slate-700">+91</span>
+            </div>
+            <input type="tel" id="regPhone" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)" placeholder="Mobile number (10 digits)" class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm" required>
+        </div>
+
+        <div class="custom-input flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-envelope"></i></span>
+            <input type="email" id="regEmail" placeholder="Email" class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm" required>
+        </div>
+
+        <div class="custom-input relative flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-graduation-cap"></i></span>
+            <select id="regClass" class="w-full bg-transparent text-slate-800 font-medium focus:outline-none text-sm appearance-none cursor-pointer" required>
+                <option value="" disabled>Select Class</option>
+                <option value="Class 6">Class 6</option>
+                <option value="Class 7">Class 7</option>
+                <option value="Class 8">Class 8</option>
+                <option value="Class 9" selected>Class 9</option>
+                <option value="Class 10">Class 10</option>
+            </select>
+        </div>
+
+        <div class="custom-input relative flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-location-dot"></i></span>
+            <select id="regState" class="w-full bg-transparent text-slate-800 font-medium focus:outline-none text-sm appearance-none cursor-pointer" required>
+                <option value="Bihar" selected>Bihar</option>
+            </select>
+        </div>
+
+        <div class="custom-input relative flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-map-pin"></i></span>
+            <select id="regDistrict" class="w-full bg-transparent text-slate-800 font-medium focus:outline-none text-sm appearance-none cursor-pointer" required>
+                <option value="" disabled selected>District</option>
+                <option>Araria</option><option>Arwal</option><option>Aurangabad</option>
+                <option>Banka</option><option>Begusarai</option><option>Bhagalpur</option>
+                <option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option>
+                <option>East Champaran</option><option>Gaya</option><option>Gopalganj</option>
+                <option>Jamui</option><option>Jehanabad</option><option>Kaimur</option>
+                <option>Katihar</option><option>Khagaria</option><option>Kishanganj</option>
+                <option>Lakhisarai</option><option>Madhepura</option><option>Madhubani</option>
+                <option>Munger</option><option>Muzaffarpur</option><option>Nalanda</option>
+                <option>Nawada</option><option>Patna</option><option>Purnia</option>
+                <option>Rohtas</option><option>Saharsa</option><option>Samastipur</option>
+                <option>Saran</option><option>Sheikhpura</option><option>Sheohar</option>
+                <option>Sitamarhi</option><option>Siwan</option><option>Supaul</option>
+                <option>Vaishali</option><option>West Champaran</option>
+            </select>
+        </div>
+
+        <div class="custom-input flex items-center px-4 py-3 rounded-2xl border border-slate-200 bg-white">
+            <span class="text-blue-600 mr-3 text-base"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="regPassword" placeholder="Password" class="w-full bg-transparent text-slate-800 font-medium placeholder-slate-400 focus:outline-none text-sm" required>
+            <button type="button" onclick="togglePassword('regPassword','eyeIconReg')" class="text-slate-400 hover:text-blue-600 focus:outline-none ml-2 p-1">
+                <i id="eyeIconReg" class="fa-solid fa-eye"></i>
+            </button>
+        </div>
+
+        <div class="pt-2">
+            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold text-base shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all">
+                REGISTER
+            </button>
+        </div>
+    </form>
+
+    <div class="text-center pt-2">
+        <button onclick="switchView('login')" class="text-blue-600 font-semibold text-sm hover:underline focus:outline-none">
+            Already have an account? Log in
+        </button>
+    </div>
+</div>
+</div>
+
+<!-- OTP MODAL -->
+<div id="otpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-[2rem] p-6 sm:p-8 max-w-sm w-full shadow-2xl text-center space-y-4 relative">
+        <button onclick="closeOtpModal()" class="absolute top-4 right-4 text-slate-500 font-bold">&times;</button>
+        <h2 class="text-xl font-bold text-slate-900">Verify OTP</h2>
+        <p class="text-xs text-slate-500">Enter 6-digit code sent to your mobile</p>
+        <input type="text" id="otpInput" maxlength="6" placeholder="Enter OTP" class="w-full py-3.5 px-4 text-center text-lg font-bold tracking-widest rounded-2xl bg-slate-100 border focus:outline-none">
+        <button type="button" onclick="verifyOtpAndComplete()" class="w-full py-3.5 rounded-2xl bg-blue-600 text-white font-bold text-sm">VERIFY & CONTINUE</button>
+    </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div id="forgotModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-[2rem] max-w-md w-full shadow-2xl overflow-hidden relative">
+        <div class="bg-blue-600 p-6 text-white relative">
+            <button onclick="closeForgotModal()" class="absolute top-4 right-4 text-white font-bold">&times;</button>
+            <h2 class="text-xl font-bold">Forgot Password</h2>
+            <p class="text-blue-100 text-sm mt-1">Reset your password through email</p>
+        </div>
+        <form id="forgotForm" onsubmit="handleForgotStep1(event)" class="p-6 space-y-4">
+            <div class="custom-input flex items-center px-4 py-3 rounded-xl border border-slate-200 bg-slate-50">
+                <i class="fa-solid fa-envelope text-blue-600 mr-3"></i>
+                <input type="email" id="forgotEmail" placeholder="Enter Your Email" class="w-full bg-transparent text-slate-800 text-sm focus:outline-none" required>
+            </div>
+            <button type="submit" id="forgotSubmitBtn" class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm">
+                <i class="fa-solid fa-paper-plane mr-2"></i>Send Link
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl text-sm font-medium opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-2">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMessage">Success message</span>
+</div>
+
+<!-- FIREBASE LOGIC -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+
+import {
+    getFirestore, collection, getDocs, query, where,
+    doc, setDoc, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+import {
+    getAuth, createUserWithEmailAndPassword,
+    signInWithEmailAndPassword, sendEmailVerification,
+    sendPasswordResetEmail, signOut, reload
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+    authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+    projectId: "rajydveducation-b4ea4",
+    storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+    messagingSenderId: "737507088855",
+    appId: "1:737507088855:web:36026fbaba7d52c0285392",
+    measurementId: "G-CTZLNK16VF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ADMIN DETAILS
+const ADMIN_UID = "AfTTShX5WrWNcu7TUOOOE2WPmcx1";
+const ADMIN_EMAIL = "rajydveducation@gmail.com";
+
+// DATE AND TIME
+function updateDateTime(){
+    const el = document.getElementById("liveDateTime");
+    if(el){
+        el.textContent = new Date().toLocaleString("en-IN",{
+            weekday:"short",
+            year:"numeric",
+            month:"short",
+            day:"numeric",
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit",
+            hour12:true
+        });
+    }
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+// VIEW SWITCH
+window.switchView = function(viewName){
+    document.getElementById("loginView").classList.toggle("hidden",viewName==="register");
+    document.getElementById("registerView").classList.toggle("hidden",viewName!=="register");
+};
+
+// PASSWORD EYE
+window.togglePassword = function(fieldId,iconId){
+    const field = document.getElementById(fieldId);
+    const icon = document.getElementById(iconId);
+    field.type = field.type==="password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+};
+
+// TOAST
+window.showToast = function(message){
+    const toast = document.getElementById("toast");
+    document.getElementById("toastMessage").textContent = message;
+    toast.classList.remove("opacity-0","pointer-events-none");
+    toast.classList.add("opacity-100");
+
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(()=>{
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0","pointer-events-none");
+    },3000);
+};
+
+// ERROR HANDLER
+function firebaseError(error){
+    console.error("Firebase Error:",error);
+
+    const messages = {
+        "auth/email-already-in-use":"This email is already registered!",
+        "auth/invalid-email":"Please enter a valid email!",
+        "auth/weak-password":"Password must be at least 6 characters!",
+        "auth/user-not-found":"Account not found. Please register first.",
+        "auth/wrong-password":"Incorrect password!",
+        "auth/invalid-credential":"Invalid Email or Password!",
+        "auth/too-many-requests":"Too many attempts. Try again later.",
+        "auth/network-request-failed":"Internet connection problem!",
+        "auth/operation-not-allowed":"Enable Email/Password in Firebase Authentication.",
+        "permission-denied":"Firestore permission denied. Check Firestore Rules."
+    };
+
+    showToast("⚠️ "+(messages[error.code] || error.message || "Something went wrong."));
+}
+
+// FIND STUDENT
+async function findStudent(loginInput){
+    const field = loginInput.includes("@") ? "email" : "mobile";
+
+    const q = query(
+        collection(db,"students"),
+        where(field,"==",loginInput)
+    );
+
+    const result = await getDocs(q);
+
+    if(result.empty) return null;
+
+    const studentDoc = result.docs[0];
+
+    return {
+        id:studentDoc.id,
+        ...studentDoc.data()
+    };
+}
+
+// CHECK DUPLICATE
+async function checkDuplicate(mobile,email){
+    const mobileQuery = query(
+        collection(db,"students"),
+        where("mobile","==",mobile)
+    );
+
+    const emailQuery = query(
+        collection(db,"students"),
+        where("email","==",email)
+    );
+
+    const [mobileResult,emailResult] = await Promise.all([
+        getDocs(mobileQuery),
+        getDocs(emailQuery)
+    ]);
+
+    return {
+        mobileExists:!mobileResult.empty,
+        emailExists:!emailResult.empty
+    };
+}
+
+// STUDENT REGISTRATION WITH EMAIL VERIFICATION
+window.initiateRegistrationOTP = async function(event){
+    event.preventDefault();
+
+    const name = document.getElementById("regName").value.trim();
+    const mobile = document.getElementById("regPhone").value.trim();
+    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const studentClass = document.getElementById("regClass").value;
+    const state = document.getElementById("regState").value;
+    const district = document.getElementById("regDistrict").value;
+    const password = document.getElementById("regPassword").value;
+
+    if(!name || !mobile || !email || !studentClass || !district || !password){
+        showToast("Please fill all registration details!");
+        return;
+    }
+
+    if(!/^[6-9]\d{9}$/.test(mobile)){
+        showToast("Enter a valid 10-digit mobile number!");
+        return;
+    }
+
+    if(password.length<6){
+        showToast("Password must be at least 6 characters!");
+        return;
+    }
+
+    try{
+        showToast("Checking mobile and email...");
+
+        const duplicate = await checkDuplicate(mobile,email);
+
+        if(duplicate.mobileExists){
+            showToast("This mobile number is already registered!");
+            return;
+        }
+
+        if(duplicate.emailExists){
+            showToast("This email is already registered!");
+            return;
+        }
+
+        showToast("Creating your account...");
+
+        const credential = await createUserWithEmailAndPassword(
+            auth,email,password
+        );
+
+        const user = credential.user;
+
+        const studentData = {
+            uid:user.uid,
+            name,
+            mobile,
+            email,
+            class:studentClass,
+            state,
+            district,
+            status:"pending",
+            emailVerified:false,
+            createdAt:new Date().toISOString()
+        };
+
+        await setDoc(doc(db,"students",user.uid),studentData);
+
+        await sendEmailVerification(user);
+        await signOut(auth);
+
+        document.getElementById("registerForm").reset();
+
+        showToast("Verification email sent! Open your email and verify your account.");
+
+    }catch(error){
+        firebaseError(error);
+    }
+};
+
+// ADMIN AND STUDENT LOGIN
+window.handleLogin = async function(event){
+    event.preventDefault();
+
+    const rawInput = document.getElementById("loginPhone").value.trim();
+    const loginInput = rawInput.includes("@")
+        ? rawInput.toLowerCase()
+        : rawInput;
+
+    const password = document.getElementById("loginPassword").value;
+    const loginButton = document.getElementById("loginButton");
+
+    if(!loginInput || !password){
+        showToast("Please enter Mobile/Email and Password!");
+        return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent = "PLEASE WAIT...";
+
+    try{
+        let email = loginInput;
+        let student = null;
+
+        // Mobile login: Student email खोजो
+        // Admin email login में यह query नहीं चलेगी
+        if(!loginInput.includes("@")){
+            showToast("Checking student account...");
+
+            student = await findStudent(loginInput);
+
+            if(!student){
+                showToast("Student account not found!");
+                return;
+            }
+
+            email = (student.email || "").trim().toLowerCase();
+
+            if(!email){
+                showToast("Student email is missing. Contact Admin.");
+                return;
+            }
+        }
+
+        // Firebase Authentication
+        showToast("Secure login in progress...");
+
+        const credential = await signInWithEmailAndPassword(
+            auth,email,password
+        );
+
+        const user = credential.user;
+
+        await reload(user);
+
+        // IMPORTANT: ADMIN CHECK FIRST
+        if(
+            user.uid === ADMIN_UID &&
+            user.email?.toLowerCase() === ADMIN_EMAIL
+        ){
+            showToast("Welcome Admin!");
+
+            setTimeout(()=>{
+                window.location.replace("admin.html");
+            },500);
+
+            return;
+        }
+
+        // Admin email से गलत UID मिला तो access रोक दो
+        if(email === ADMIN_EMAIL && user.uid !== ADMIN_UID){
+            await signOut(auth);
+            showToast("Admin account verification failed!");
+            return;
+        }
+
+        // Email login पर Student का रिकॉर्ड खोजो
+        if(!student){
+            student = await findStudent(user.email.toLowerCase());
+        }
+
+        if(!student || student.uid !== user.uid){
+            await signOut(auth);
+            showToast("Student account not found!");
+            return;
+        }
+
+        // Student email verification
+        if(!user.emailVerified){
+            try{
+                await sendEmailVerification(user);
+                showToast("Email not verified! A new verification link has been sent.");
+            }catch(emailError){
+                console.error(emailError);
+                showToast("Please verify your email using the link already sent.");
+            }
+
+            await signOut(auth);
+            return;
+        }
+
+        // Activate Student
+        await updateDoc(doc(db,"students",student.id),{
+            status:"active",
+            emailVerified:true
+        });
+
+        const loggedInStudent = {
+            ...student,
+            uid:user.uid,
+            status:"active",
+            emailVerified:true
+        };
+
+        delete loggedInStudent.password;
+
+        localStorage.setItem(
+            "currentStudent",
+            JSON.stringify(loggedInStudent)
+        );
+
+        showToast("Welcome back, "+(student.name || "Student")+"!");
+
+        setTimeout(()=>{
+            window.location.replace("dashboard.html");
+        },700);
+
+    }catch(error){
+        firebaseError(error);
+
+    }finally{
+        loginButton.disabled = false;
+        loginButton.textContent = "LOG IN";
+    }
+};
+
+// FORGOT PASSWORD
+window.openForgotModal = function(event){
+    if(event) event.preventDefault();
+
+    document.getElementById("forgotForm").reset();
+    document.getElementById("forgotModal").classList.remove("hidden");
+    document.getElementById("forgotModal").classList.add("flex");
+};
+
+window.closeForgotModal = function(){
+    document.getElementById("forgotModal").classList.remove("flex");
+    document.getElementById("forgotModal").classList.add("hidden");
+};
+
+// FIREBASE PASSWORD RESET
+window.handleForgotStep1 = async function(event){
+    event.preventDefault();
+
+    const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+    const button = document.getElementById("forgotSubmitBtn");
+
+    if(!email){
+        showToast("Please enter your email!");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Sending Link...";
+
+    try{
+        await sendPasswordResetEmail(auth,email);
+
+        showToast("Password reset link sent! Check your email.");
+
+        document.getElementById("forgotForm").reset();
+        closeForgotModal();
+
+    }catch(error){
+        firebaseError(error);
+
+    }finally{
+        button.disabled = false;
+        button.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i>Send Link';
+    }
+};
+
+// OTP MODAL
+window.closeOtpModal = function(){
+    document.getElementById("otpModal").classList.add("hidden");
+    document.getElementById("otpModal").classList.remove("flex");
+};
+
+window.verifyOtpAndComplete = function(){
+    showToast("Mobile OTP is not enabled in this registration flow. Email verification is used.");
+};
+
+</script>
+</body>
+</html>

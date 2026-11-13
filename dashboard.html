@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAJ YDV EDUCATION - Student Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef4ff 0%, #f8faff 100%);
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* FULL WIDTH STICKY HEADER */
+  header {
+    width: 100%;
+    background: #ffffff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand { font-size: 20px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
+
+  /* HEADER RIGHT ACTIONS (Notification, Profile, Logout) */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Icon Buttons (Notification & Logout) */
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+  }
+  .icon-btn:hover { background: #e2e8f0; }
+  .logout-btn { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+  .logout-btn:hover { background: #fee2e2; }
+
+  /* Corner Profile Pill (Directly opens profile.html) */
+  .profile-corner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f1f5f9;
+    padding: 6px 14px 6px 6px;
+    border-radius: 30px;
+    cursor: pointer;
+    border: 1px solid #cbd5e1;
+    transition: 0.2s;
+  }
+  .profile-corner:hover { background: #e2e8f0; }
+  .profile-corner img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2563eb;
+  }
+  .profile-info { text-align: left; line-height: 1.2; }
+  .profile-info strong { display: block; font-size: 14px; color: #0f172a; }
+  .profile-info small { font-size: 11px; color: #475569; }
+
+  /* FULL SCREEN MAIN DASHBOARD CONTAINER */
+  .container {
+    width: 100%;
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-box {
+    width: 100%;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(30, 58, 138, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* LIVE CLASS BANNER CARD */
+  .live-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #ffffff;
+    border: 1.5px solid #6495ed;
+    border-radius: 50px;
+    padding: 20px 32px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .live-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12); }
+  .live-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fef9c3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .live-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 12px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .live-text h3 { font-size: 22px; color: #0f172a; margin-bottom: 4px; font-weight: 800; }
+  .live-text p { font-size: 15px; color: #475569; font-weight: 500; }
+
+  /* FULL SCREEN RESPONSIVE GRID */
+  .menu-grid {
+    width: 100%;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    align-content: stretch;
+  }
+  .menu-pill {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #ffffff;
+    border: 1.5px solid #6495ed;
+    border-radius: 50px;
+    padding: 18px 28px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .menu-pill:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.1); }
+  .pill-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .pill-title { font-size: 19px; font-weight: 800; color: #1e293b; }
+
+  /* Icon Background Colors */
+  .bg-blue { background: #e0e7ff; color: #2563eb; }
+  .bg-green { background: #dcfce7; color: #16a34a; }
+  .bg-purple { background: #f3e8ff; color: #9333ea; }
+  .bg-cyan { background: #cffafe; color: #0891b2; }
+  .bg-indigo { background: #e0f2fe; color: #0284c7; }
+  .bg-red { background: #fee2e2; color: #dc2626; }
+  .bg-teal { background: #ccfbf1; color: #0d9488; }
+  .bg-mint { background: #dcfce7; color: #15803d; }
+
+  @media (max-width: 600px) {
+    header { padding: 12px 15px; }
+    .brand { font-size: 16px; }
+    .container { padding: 12px; }
+    .dashboard-box { padding: 15px; border-radius: 16px; }
+    .menu-grid { grid-template-columns: 1fr; gap: 12px; }
+    .menu-pill { padding: 14px 18px; }
+    .pill-title { font-size: 16px; }
+    .profile-info small { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER WITH NOTIFICATION, PROFILE & LOGOUT -->
+<header>
+  <div class="brand">🎓 RAJ YDV EDUCATION</div>
+
+  <div class="header-actions">
+    <!-- Notification Button -->
+    <div class="icon-btn" onclick="openNotifications()" title="Notifications">
+      🔔
+    </div>
+
+    <!-- Click on this profile corner opens profile.html directly -->
+    <div class="profile-corner" onclick="openProfilePage()" title="Edit Profile">
+      <img id="navUserPhoto" src="https://placehold.co/100x100?text=User" alt="Profile">
+      <div class="profile-info">
+        <strong id="navUserName">Aryan Raj</strong>
+        <small id="navUserClass">Class 9 ⌄</small>
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="icon-btn logout-btn" onclick="logoutStudent()" title="Logout">
+      🚪
+    </div>
+  </div>
+</header>
+
+<!-- FULL SCREEN DASHBOARD CONTENT -->
+<div class="container">
+  <div class="dashboard-box">
+    
+    <!-- Live Class Card -->
+    <div class="live-card" onclick="openSection('live')">
+      <div class="live-icon">
+        <span class="live-badge">Live</span>
+      </div>
+      <div class="live-text">
+        <h3>Live Class</h3>
+        <p>Join now &bull; Limited seats</p>
+      </div>
+    </div>
+
+    <!-- 8 Capsule Options Grid -->
+    <div class="menu-grid">
+      <div class="menu-pill" onclick="openSection('all-courses')">
+        <div class="pill-icon bg-blue">🎓</div>
+        <div class="pill-title">All Courses</div>
+      </div>
+
+      <!-- Notes opens notes.html -->
+      <div class="menu-pill" onclick="window.location.href='notes.html'">
+        <div class="pill-icon bg-green">📒</div>
+        <div class="pill-title">Notes</div>
+      </div>
+
+      <div class="menu-pill" onclick="openSection('my-class')">
+        <div class="pill-icon bg-purple">💻</div>
+        <div class="pill-title">My Class</div>
+      </div>
+
+      <div class="menu-pill" onclick="openSection('social')">
+        <div class="pill-icon bg-cyan">📱</div>
+        <div class="pill-title">Social</div>
+      </div>
+
+      <!-- Test opens test.html -->
+      <div class="menu-pill" onclick="window.location.href='test.html'">
+        <div class="pill-icon bg-indigo">📝</div>
+        <div class="pill-title">Test</div>
+      </div>
+
+      <div class="menu-pill" onclick="openSection('free-videos')">
+        <div class="pill-icon bg-red">▶️</div>
+        <div class="pill-title">Free Videos</div>
+      </div>
+
+      <div class="menu-pill" onclick="openSection('free-test')">
+        <div class="pill-icon bg-teal">📋</div>
+        <div class="pill-title">Free Test</div>
+      </div>
+
+      <div class="menu-pill" onclick="openSection('free-notes')">
+        <div class="pill-icon bg-mint">📄</div>
+        <div class="pill-title">Free Notes</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+  authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+  projectId: "rajydveducation-b4ea4",
+  storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+  messagingSenderId: "737507088855",
+  appId: "1:737507088855:web:36026fbaba7d52c0285392",
+  measurementId: "G-CTZLNK16VF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Open Profile Page directly
+function openProfilePage() {
+  window.location.href = "profile.html";
+}
+
+// Logout Function (Clears localStorage and redirects to index.html)
+function logoutStudent() {
+  if (confirm("क्या आप सच में लॉग आउट करना चाहते हैं?")) {
+    localStorage.removeItem("currentStudent");
+    window.location.href = "index.html";
+  }
+}
+
+// Notifications Function
+function openNotifications() {
+  alert("🔔 No new notifications right now!");
+}
+
+// Load Student Data from localStorage (currentStudent)
+window.addEventListener("DOMContentLoaded", async () => {
+  const savedStudentStr = localStorage.getItem("currentStudent");
+  
+  if (savedStudentStr) {
+    const student = JSON.parse(savedStudentStr);
+    if (student.name) document.getElementById("navUserName").textContent = student.name;
+    if (student.studentClass || student.classNo) {
+      document.getElementById("navUserClass").textContent = (student.studentClass || student.classNo) + " ⌄";
+    }
+    if (student.photoURL) document.getElementById("navUserPhoto").src = student.photoURL;
+  }
+});
+
+function openSection(section) {
+  alert("Opening: " + section.toUpperCase());
+}
+</script>
+
+</body>
+</html>

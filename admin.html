@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAJ YDV EDUCATION | Admin Dashboard</title>
+
+<style>
+*{box-sizing:border-box}
+:root{--blue:#315bdc;--navy:#172746;--bg:#f3f6fb;--text:#202b3c;--muted:#718096;--border:#e8edf5}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+button{border:0;padding:10px 14px;border-radius:9px;background:var(--blue);color:white;cursor:pointer;font-weight:bold;margin:3px}
+button:hover{filter:brightness(.93)}
+button:disabled{opacity:.6;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px;margin:7px 0 14px;border:1px solid #dce3ed;border-radius:8px;font-size:14px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+label{font-size:13px;font-weight:bold}
+header{height:68px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:10px 22px;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px #17274620}
+header h2{font-size:18px;color:white;margin:0}
+.admin-corner{display:flex;align-items:center;gap:10px;cursor:pointer}
+.admin-corner img{height:42px;width:42px;border-radius:50%;object-fit:cover;border:2px solid #ffffff70}
+.admin-corner strong,.admin-corner small{display:block}
+.admin-corner strong{font-size:13px;color:white}
+.admin-corner small{font-size:11px;color:#cbd5e1;margin-top:4px}
+.admin-menu{display:none;position:absolute;right:18px;top:62px;background:white;padding:10px;border-radius:12px;box-shadow:0 8px 30px #17274625;min-width:170px;z-index:100}
+.admin-menu button{width:100%;margin:4px 0;text-align:left}
+.layout{display:flex;min-height:calc(100vh - 68px)}
+.sidebar{width:235px;background:var(--navy);padding:17px 12px;flex-shrink:0}
+.sidebar a{display:block;padding:12px 13px;color:#cbd5e1;text-decoration:none;border-radius:9px;margin:4px 0;font-size:13px;font-weight:bold;cursor:pointer;white-space:nowrap}
+.sidebar a:hover,.sidebar a.active{background:var(--blue);color:white}
+main{padding:24px;flex:1;min-width:0;max-width:1600px;margin:auto;width:100%}
+.page{display:none}.page.active{display:block}
+.page>h2{font-size:22px;margin:0 0 20px;color:#1d2d49}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px}
+.card,.panel{background:white;padding:18px;border-radius:15px;margin-bottom:15px;border:1px solid var(--border);box-shadow:0 4px 18px #17274609}
+.card p{font-size:13px;color:var(--muted);margin:0}
+.card h2{font-size:28px;color:var(--blue);margin:10px 0}
+.card small{color:#15965b;font-size:11px}
+.stat-icon{font-size:22px;margin-bottom:10px}
+.welcome{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.welcome h2{margin:0 0 6px;font-size:23px}
+.welcome p{margin:0;color:var(--muted);font-size:13px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.quick-card{background:white;border:1px solid var(--border);padding:16px;border-radius:13px}
+.quick-card h3{font-size:14px;margin:8px 0}
+.quick-card p{font-size:11px;color:var(--muted);min-height:30px}
+.quick-card button{font-size:11px;padding:8px}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+.subject-card,.category-card{padding:20px;border-radius:12px;text-align:center;cursor:pointer;background:#f0f5ff;border:1px solid #cbdafa}
+.subject-card h3{margin:0;color:#20365e}
+.category-card{background:#effbf4;border-color:#bde9cc}
+.category-card h3{margin:0;color:#166534}
+.table-wrap{overflow-x:auto;border-radius:9px}
+table{width:100%;border-collapse:collapse;background:white;min-width:560px}
+th,td{padding:12px;border-bottom:1px solid #edf0f5;text-align:left;font-size:13px;overflow-wrap:anywhere}
+th{background:#f2f5fb;color:#526078}
+tr:hover td{background:#fafbfe}
+.danger{background:#dc3f4d}.green{background:#15965b}.secondary{background:#64748b}
+.status{font-size:13px;margin-top:10px;overflow-wrap:anywhere}
+.small{font-size:12px;color:var(--muted)}
+.question-box{border:1px solid #e2e8f0;padding:14px;border-radius:10px;margin:12px 0;background:#fbfcff}
+.profile-modal{display:none;position:fixed;inset:0;background:#0008;z-index:200;justify-content:center;align-items:center;padding:15px}
+.profile-box{background:white;padding:22px;border-radius:15px;width:100%;max-width:410px;max-height:90vh;overflow:auto}
+.profile-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:10px auto;border:3px solid #e5eaf4}
+.student-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #ccc}
+.card,.quick-card{transition:.2s}
+.card:hover,.quick-card:hover{transform:translateY(-2px)}
+@media(max-width:900px){.sidebar{width:205px}.quick-grid{grid-template-columns:repeat(2,1fr)}main{padding:17px}}
+@media(max-width:700px){
+.layout{display:block}.sidebar{width:100%;display:flex;overflow-x:auto;padding:9px;gap:5px}
+.sidebar a{white-space:nowrap;margin:0;padding:10px}main{padding:13px}
+header{padding:10px 13px}header h2{font-size:14px}
+.admin-corner img{width:36px;height:36px}
+.dashboard-grid{grid-template-columns:1fr}
+.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.card{padding:13px}.card h2{font-size:23px}
+.quick-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:380px){.quick-grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🎓 RAJ YDV EDUCATION</h2>
+<div class="admin-corner" onclick="toggleAdminMenu()">
+<img id="cornerAdminPhoto" src="https://placehold.co/100x100?text=Admin" alt="Admin">
+<div>
+<strong id="cornerAdminName">Raj Ydv Admin</strong>
+<small>Administrator ⌄</small>
+</div>
+</div>
+<div id="adminMenu" class="admin-menu">
+<button onclick="openAdminProfile()">👤 My Profile</button>
+<button class="danger" onclick="logout()">🚪 Logout</button>
+</div>
+</header>
+
+<div class="layout">
+<nav class="sidebar">
+<a class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</a>
+<a onclick="showPage('students',this)">🎓 Students</a>
+<a onclick="showPage('classes',this)">📚 Classes & Chapters</a>
+<a onclick="showPage('subjects',this)">📖 Subjects</a>
+<a onclick="showPage('notes',this)">📄 Upload Notes</a>
+<a onclick="showPage('lectures',this)">🎥 Lectures</a>
+<a onclick="showPage('quiz',this)">📝 Create Quiz</a>
+<a onclick="showPage('tests',this)">📋 Tests</a>
+<a onclick="showPage('notices-admin',this)">📢 Notice Board</a>
+<a onclick="showPage('content',this)">📦 All Content</a>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<div class="welcome">
+<div><h2>Admin Dashboard 👋</h2><p>Welcome to RAJ YDV EDUCATION Management Panel</p></div>
+<button onclick="showPage('students')">View Students →</button>
+</div>
+
+<div class="cards">
+<div class="card"><div class="stat-icon">🎓</div><p>Total Students</p><h2 id="studentCount">0</h2><small>Registered Students</small></div>
+<div class="card"><div class="stat-icon">📚</div><p>Total Classes</p><h2>5</h2><small>Class 6 to 10</small></div>
+<div class="card"><div class="stat-icon">📄</div><p>Total Notes</p><h2 id="noteCount">0</h2><small>PDF Notes</small></div>
+<div class="card"><div class="stat-icon">🎥</div><p>Total Lectures</p><h2 id="lectureCount">0</h2><small>Video Lectures</small></div>
+<div class="card"><div class="stat-icon">📝</div><p>Total Quizzes</p><h2 id="quizCount">0</h2><small>MCQ Quizzes</small></div>
+<div class="card"><div class="stat-icon">📋</div><p>Total Tests</p><h2 id="testCount">0</h2><small>Test Papers</small></div>
+</div>
+
+<div class="panel" style="margin-top:12px">
+<h3>⚙️ Master Control Panel</h3>
+<p class="small">Manage your complete education website.</p>
+<div class="quick-grid">
+<div class="quick-card"><div>🎓</div><h3>Student Management</h3><p>View and manage students.</p><button onclick="showPage('students')">Manage Students</button></div>
+<div class="quick-card"><div>📚</div><h3>Class Management</h3><p>Manage classes and chapters.</p><button onclick="showPage('classes')">Manage Classes</button></div>
+<div class="quick-card"><div>📖</div><h3>Subject Management</h3><p>Add and manage subjects.</p><button onclick="showPage('subjects')">Manage Subjects</button></div>
+<div class="quick-card"><div>📄</div><h3>Notes Management</h3><p>Add PDF links.</p><button onclick="showPage('notes')">Upload Notes</button></div>
+<div class="quick-card"><div>🎥</div><h3>Lecture Management</h3><p>Add YouTube lectures.</p><button onclick="showPage('lectures')">Add Lecture</button></div>
+<div class="quick-card"><div>📝</div><h3>Quiz Management</h3><p>Create MCQ quizzes.</p><button onclick="showPage('quiz')">Create Quiz</button></div>
+<div class="quick-card"><div>📋</div><h3>Test Management</h3><p>Add test PDF links.</p><button onclick="showPage('tests')">Upload Test</button></div>
+<div class="quick-card"><div>📢</div><h3>Notice Board</h3><p>Publish site notices.</p><button onclick="showPage('notices-admin')">Manage Notices</button></div>
+<div class="quick-card"><div>📦</div><h3>All Content</h3><p>Manage uploaded content.</p><button onclick="showPage('content')">View Content</button></div>
+<div class="quick-card"><div>👤</div><h3>Admin Profile</h3><p>Update admin details.</p><button onclick="openAdminProfile()">Edit Profile</button></div>
+</div>
+</div>
+
+<div class="dashboard-grid">
+<div class="panel"><h3>📊 Website Overview</h3><p class="small">RAJ YDV EDUCATION Learning Platform</p><p>📚 Classes: <b>6 to 10</b></p><p>📄 Study Notes: <b>PDF Links</b></p><p>🎥 Video Lectures: <b>YouTube</b></p><p>📝 Online Quiz: <b>MCQ</b></p></div>
+<div class="panel"><h3>🔔 Quick Actions</h3>
+<button class="green" style="width:100%;margin:5px 0" onclick="showPage('notes')">+ Add Notes</button>
+<button style="width:100%;margin:5px 0" onclick="showPage('lectures')">+ Add Lecture</button>
+<button style="width:100%;margin:5px 0" onclick="showPage('quiz')">+ Create Quiz</button>
+<button class="secondary" style="width:100%;margin:5px 0" onclick="showPage('notices-admin')">+ Publish Notice</button>
+</div>
+</div>
+<div class="panel"><h3>🎓 RAJ YDV EDUCATION</h3><p class="small">आज की पढ़ाई, कल की सफलता।</p></div>
+</section>
+
+<!-- STUDENTS -->
+<section id="students" class="page">
+<h2>🎓 Students Management</h2>
+<div class="panel">
+<label>Filter Class</label>
+<select id="studentFilter" onchange="loadStudents()">
+<option value="">All Classes</option>
+<option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option>
+</select>
+<div class="table-wrap"><table>
+<thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Mobile</th><th>Class</th><th>District</th><th>Action</th></tr></thead>
+<tbody id="studentTable"></tbody>
+</table></div>
+</div>
+</section>
+
+<!-- CLASSES -->
+<section id="classes" class="page">
+<div id="classesListContainer">
+<h2>📚 Select Class</h2>
+<div class="cards">
+<div class="card" onclick="openClassSubjects('Class 6')"><h2>6</h2>Class 6</div>
+<div class="card" onclick="openClassSubjects('Class 7')"><h2>7</h2>Class 7</div>
+<div class="card" onclick="openClassSubjects('Class 8')"><h2>8</h2>Class 8</div>
+<div class="card" onclick="openClassSubjects('Class 9')"><h2>9</h2>Class 9</div>
+<div class="card" onclick="openClassSubjects('Class 10')"><h2>10</h2>Class 10</div>
+</div>
+</div>
+
+<div id="classSubjectView" class="panel" style="display:none">
+<button class="secondary" onclick="backToClasses()">⬅ Back</button>
+<h2 id="selectedClassTitle"></h2><div id="classSubjectsGrid" class="quick-grid"></div>
+</div>
+
+<div id="subSubjectsView" class="panel" style="display:none">
+<button class="secondary" onclick="backToMainSubjects()">⬅ Back</button>
+<h2 id="selectedMainSubjectTitle"></h2><div id="subSubjectsGrid" class="quick-grid"></div>
+</div>
+
+<div id="chaptersListView" class="panel" style="display:none">
+<button class="secondary" onclick="backToSubjectSelection()">⬅ Back</button>
+<h2 id="selectedSubjectHeaderTitle"></h2>
+<label>Add New Chapter</label>
+<input id="newChapterName" placeholder="Chapter 1: Real Numbers">
+<button onclick="addNewChapter()">Add Chapter</button>
+<div id="chaptersGrid" class="quick-grid" style="margin-top:15px"></div>
+</div>
+
+<div id="subjectCategoriesView" class="panel" style="display:none">
+<button class="secondary" onclick="backToChapters()">⬅ Back</button>
+<h2 id="selectedChapterTitle"></h2>
+<div class="quick-grid">
+<div class="category-card" onclick="openSubjectContentList('Lecture')"><h3>🎥 Video Lectures</h3></div>
+<div class="category-card" onclick="openSubjectContentList('Notes')"><h3>📄 Notes / PDF</h3></div>
+<div class="category-card" onclick="openSubjectContentList('Test')"><h3>📋 Test Papers</h3></div>
+<div class="category-card" onclick="openSubjectContentList('Quiz')"><h3>📝 Quizzes</h3></div>
+</div>
+</div>
+
+<div id="subjectContentListView" class="panel" style="display:none">
+<button class="secondary" onclick="backToCategories()">⬅ Back</button>
+<h2 id="selectedCategoryTitle"></h2>
+<div class="table-wrap"><table><thead><tr><th>Title</th><th>Type</th><th>Action</th></tr></thead><tbody id="categoryItemsTable"></tbody></table></div>
+</div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="subjects" class="page">
+<h2>📖 Subjects Manager</h2>
+<div class="panel">
+<label>Select Class</label>
+<select id="manageClassSelect" onchange="loadClassSubjectsManager()">
+<option>Class 6</option><option>Class 7</option><option>Class 8</option><option selected>Class 9</option><option>Class 10</option>
+</select>
+<label>Subject Name</label>
+<input id="newSubjectName" placeholder="Subject Name">
+<button onclick="addClassSubject()">+ Add Subject</button>
+</div>
+<div class="panel"><h3 id="currentClassTitle">Subjects List</h3><div id="classSubjectsList"></div></div>
+</section>
+
+<!-- NOTES -->
+<section id="notes" class="page">
+<h2>📄 Add Notes / PDF</h2>
+<div class="panel">
+<label>Class</label><select id="notesClass" class="class-select"></select>
+<label>Subject</label><select id="notesSubject"></select>
+<label>Chapter (optional)</label><input id="notesChapter" placeholder="Chapter Name">
+<label>Notes Title</label><input id="notesTitle" placeholder="Chapter Notes">
+<label>Google Drive PDF Link</label><input id="notesURL" type="url" placeholder="https://drive.google.com/file/d/...">
+<p class="small">Drive में General access को Anyone with the link - Viewer करें।</p>
+<button onclick="uploadFile('Notes')">Save Notes</button>
+<p id="notesMessage" class="status"></p>
+</div>
+</section>
+
+<!-- LECTURES -->
+<section id="lectures" class="page">
+<h2>🎥 Add Video Lectures</h2>
+<div class="panel">
+<label>Class</label><select id="lectureClass" class="class-select"></select>
+<label>Subject</label><select id="lectureSubject"></select>
+<label>Chapter (optional)</label><input id="lectureChapter" placeholder="Chapter Name">
+<label>Lecture Title</label><input id="lectureTitle" placeholder="Chapter 1 Lecture">
+<label>YouTube Video Link</label><input id="lectureURL" placeholder="https://youtube.com/...">
+<button onclick="uploadLecture()">Save Lecture</button>
+<p id="lectureMessage" class="status"></p>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="page">
+<h2>📝 Create Quiz (MCQ)</h2>
+<div class="panel">
+<label>Class</label><select id="quizClass" class="class-select" onchange="onQuizClassChange()"></select>
+<label>Subject</label><select id="quizSubject" onchange="loadQuizChapters()"></select>
+<label>Chapter</label><select id="quizChapter"><option value="">Select Chapter</option></select>
+<label>Quiz Title</label><input id="quizTitle" placeholder="Chapter 1 Quiz">
+<div id="questions"></div>
+<button onclick="addQuestion()">+ Add Question</button>
+<button class="green" onclick="saveQuiz()">Save Quiz</button>
+<p id="quizMessage" class="status"></p>
+</div>
+</section>
+
+<!-- TESTS -->
+<section id="tests" class="page">
+<h2>📋 Add Test Paper</h2>
+<div class="panel">
+<label>Class</label><select id="testClass" class="class-select"></select>
+<label>Subject</label><select id="testSubject"></select>
+<label>Chapter (optional)</label><input id="testChapter" placeholder="Chapter Name">
+<label>Test Title</label><input id="testTitle" placeholder="Monthly Test">
+<label>Google Drive PDF Link</label><input id="testURL" type="url" placeholder="https://drive.google.com/file/d/...">
+<p class="small">Drive PDF का access Anyone with the link - Viewer रखें।</p>
+<button onclick="uploadFile('Test')">Save Test</button>
+<p id="testMessage" class="status"></p>
+</div>
+</section>
+
+<!-- NOTICES ADMIN SECTION -->
+<section id="notices-admin" class="page">
+<h2>📢 Notice Board Management</h2>
+<div class="panel">
+<label>Notice Title</label>
+<input id="adminNoticeTitle" placeholder="जैसे: कल सुबह 10 बजे स्पेशल क्लास है">
+
+<label>Notice Message / Details</label>
+<textarea id="adminNoticeMsg" rows="4" placeholder="यहाँ नोटिस की पूरी जानकारी विस्तार से लिखें..."></textarea>
+
+<button onclick="publishNotice()">📢 Publish Notice</button>
+<p id="adminNoticeStatus" class="status"></p>
+</div>
+</section>
+
+<!-- CONTENT -->
+<section id="content" class="page">
+<h2>📦 All Uploaded Content</h2>
+<div class="panel">
+<label>Filter Class</label>
+<select id="filterClass" onchange="loadContent()">
+<option value="">All Classes</option>
+<option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option>
+</select>
+<div class="table-wrap"><table><thead><tr><th>Title</th><th>Type</th><th>Class</th><th>Subject</th><th>Action</th></tr></thead><tbody id="contentTable"></tbody></table></div>
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- ADMIN PROFILE MODAL -->
+<div id="profileModal" class="profile-modal">
+<div class="profile-box">
+<h2>👤 Admin Profile</h2>
+
+<img id="profilePhotoPreview" class="profile-photo"
+src="https://placehold.co/100x100?text=Admin" alt="Admin Photo">
+
+<label>📸 Upload Profile Photo</label>
+<input type="file" id="adminPhotoFile" accept="image/*" onchange="previewAdminPhoto(event)">
+<p class="small">JPG, PNG या WEBP फोटो चुनें। फोटो अपने आप छोटी होगी।</p>
+
+<label>Admin Name</label>
+<input id="profileName" placeholder="Admin Name">
+
+<label>Email</label>
+<input id="profileEmail" type="email" value="rajydveducation@gmail.com" disabled>
+
+<button id="saveProfileBtn" onclick="saveAdminProfile()">💾 Save Profile</button>
+<button class="danger" onclick="closeAdminProfile()">Close</button>
+<p id="profileMessage" class="status"></p>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+authDomain:"rajydveducation-b4ea4.firebaseapp.com",
+projectId:"rajydveducation-b4ea4",
+storageBucket:"rajydveducation-b4ea4.firebasestorage.app",
+messagingSenderId:"737507088855",
+appId:"1:737507088855:web:36026fbaba7d52c0285392",
+measurementId:"G-CTZLNK16VF"
+};
+
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+
+const db=firebase.firestore();
+const auth=firebase.auth();
+
+const ADMIN_UID="AfTTShX5WrWNcu7TUOOOE2WPmcx1";
+const ADMIN_EMAIL="rajydveducation@gmail.com";
+
+const classes=["Class 6","Class 7","Class 8","Class 9","Class 10"];
+const defaults=["Hindi","English","Maths","Science","SST","Sanskrit"];
+
+const subCategoryMapping={
+Science:["Physics","Chemistry","Biology"],
+SST:["History","Geography","Economics","Polity"]
+};
+
+let currentActiveContext={class:"",subject:"",subSubject:"",chapter:""};
+let questionNumber=0;
+let adminPanelStarted=false;
+let compressedAdminPhoto="";
+
+document.querySelectorAll(".class-select").forEach(s=>{
+s.innerHTML=classes.map(c=>`<option value="${c}">${c}</option>`).join("");
+});
+
+/* AUTH SECURITY */
+auth.onAuthStateChanged(async user=>{
+if(!user){
+window.location.replace("index.html");
+return;
+}
+
+if(user.uid!==ADMIN_UID || user.email?.toLowerCase()!==ADMIN_EMAIL){
+await auth.signOut();
+alert("आपको Admin Panel की अनुमति नहीं है।");
+window.location.replace("index.html");
+return;
+}
+
+if(!adminPanelStarted){
+adminPanelStarted=true;
+try{
+await startAdminPanel();
+}catch(e){
+console.error(e);
+alert("Admin Panel Load Error: "+e.message);
+}
+}
+});
+
+async function startAdminPanel(){
+await loadAdminProfileFromFirestore();
+await refreshDashboard();
+await loadStudents();
+await loadClassSubjectsManager();
+
+for(const id of ["notesClass","lectureClass","quizClass","testClass"]){
+await loadSubjectOptionsFor(id,id.replace("Class","Subject"));
+}
+await initQuizDropdowns();
+}
+
+/* NAVIGATION */
+function showPage(id,el){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
+
+if(el)el.classList.add("active");
+else{
+const link=[...document.querySelectorAll(".sidebar a")].find(a=>a.getAttribute("onclick")?.includes("'"+id+"'"));
+if(link)link.classList.add("active");
+}
+
+if(id==="students")loadStudents();
+if(id==="subjects")loadClassSubjectsManager();
+if(id==="classes")backToClasses();
+if(id==="content")loadContent();
+if(id==="quiz")initQuizDropdowns();
+}
+
+async function logout(){
+try{
+await auth.signOut();
+localStorage.removeItem("isAdminLoggedIn");
+localStorage.removeItem("currentStudent");
+window.location.replace("index.html");
+}catch(e){alert("Logout Error: "+e.message)}
+}
+
+/* ADMIN MENU */
+function toggleAdminMenu(){
+const m=document.getElementById("adminMenu");
+m.style.display=m.style.display==="block"?"none":"block";
+}
+function openAdminProfile(){
+document.getElementById("adminMenu").style.display="none";
+document.getElementById("profileModal").style.display="flex";
+compressedAdminPhoto="";
+document.getElementById("adminPhotoFile").value="";
+}
+function closeAdminProfile(){
+document.getElementById("profileModal").style.display="none";
+document.getElementById("profileMessage").textContent="";
+}
+
+/* PHOTO COMPRESSION */
+function previewAdminPhoto(event){
+const file=event.target.files[0];
+if(!file)return;
+
+if(!file.type.startsWith("image/")){
+alert("कृपया सही Image File चुनें।");
+event.target.value="";
+return;
+}
+
+const reader=new FileReader();
+reader.onload=function(e){
+const img=new Image();
+img.onload=function(){
+const canvas=document.createElement("canvas");
+const maxSize=240;
+let width=img.width;
+let height=img.height;
+
+if(width>height && width>maxSize){
+height=Math.round(height*maxSize/width);
+width=maxSize;
+}else if(height>maxSize){
+width=Math.round(width*maxSize/height);
+height=maxSize;
+}
+
+canvas.width=width;
+canvas.height=height;
+const ctx=canvas.getContext("2d");
+ctx.drawImage(img,0,0,width,height);
+compressedAdminPhoto=canvas.toDataURL("image/jpeg",0.55);
+document.getElementById("profilePhotoPreview").src=compressedAdminPhoto;
+document.getElementById("profileMessage").textContent="Photo Preview Ready";
+};
+img.src=e.target.result;
+};
+reader.readAsDataURL(file);
+}
+
+/* SAVE ADMIN PROFILE */
+async function saveAdminProfile(){
+const name=document.getElementById("profileName").value.trim();
+const msg=document.getElementById("profileMessage");
+const btn=document.getElementById("saveProfileBtn");
+
+if(!name)return alert("Admin Name लिखें।");
+
+try{
+btn.disabled=true;
+msg.textContent="Saving Profile...";
+
+const profileData={
+name:name,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+};
+
+if(compressedAdminPhoto){
+profileData.photoData=compressedAdminPhoto;
+}
+
+await db.collection("adminProfile").doc("mainAdmin").set(profileData,{merge:true});
+await loadAdminProfileFromFirestore();
+
+msg.textContent="✅ Profile Updated Successfully!";
+compressedAdminPhoto="";
+document.getElementById("adminPhotoFile").value="";
+setTimeout(closeAdminProfile,1200);
+}catch(e){
+msg.textContent="Error: "+e.message;
+}finally{
+btn.disabled=false;
+}
+}
+
+/* LOAD ADMIN PROFILE */
+async function loadAdminProfileFromFirestore(){
+try{
+const d=await db.collection("adminProfile").doc("mainAdmin").get();
+const data=d.exists?d.data():{};
+const name=data.name||"Raj Ydv Admin";
+const photo=data.photoData||data.photoURL||"https://placehold.co/100x100?text=Admin";
+
+document.getElementById("cornerAdminName").textContent=name;
+document.getElementById("cornerAdminPhoto").src=photo;
+document.getElementById("profilePhotoPreview").src=photo;
+document.getElementById("profileName").value=name;
+}catch(e){console.error(e);}
+}
+
+/* PUBLISH NOTICE */
+async function publishNotice(){
+const title = document.getElementById("adminNoticeTitle").value.trim();
+const message = document.getElementById("adminNoticeMsg").value.trim();
+const status = document.getElementById("adminNoticeStatus");
+
+if(!title || !message){
+status.textContent = "कृपया टाइटल और मैसेज दोनों भरें!";
+return;
+}
+
+try{
+status.textContent = "Publishing notice...";
+await db.collection("notices").add({
+title: title,
+message: message,
+createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+status.textContent = "✅ Notice Published Successfully!";
+document.getElementById("adminNoticeTitle").value = "";
+document.getElementById("adminNoticeMsg").value = "";
+}catch(e){
+status.textContent = "Error: " + e.message;
+}
+}
+
+/* LOAD STUDENTS WITH PHOTO */
+async function loadStudents(){
+const body=document.getElementById("studentTable");
+const filter=document.getElementById("studentFilter").value;
+body.innerHTML="<tr><td colspan='7'>Loading...</td></tr>";
+
+try{
+const snap=await db.collection("students").get();
+body.innerHTML="";
+let count=0;
+
+snap.forEach(d=>{
+const s=d.data();
+const cls=s.studentClass||s.classNo||s.class||"";
+if(filter&&String(cls)!==filter)return;
+
+const photo = s.photoData || s.photo || "https://placehold.co/100x100?text=User";
+
+const tr=document.createElement("tr");
+
+const photoTd=document.createElement("td");
+photoTd.innerHTML=`<img src="${escapeHTML(photo)}" class="student-avatar" alt="Photo">`;
+tr.appendChild(photoTd);
+
+[s.name||"-", s.email||"-", s.mobile||"-", cls||"-", s.district||"-"].forEach(v=>{
+const td=document.createElement("td");
+td.textContent=v;
+tr.appendChild(td);
+});
+
+const td=document.createElement("td");
+const b=document.createElement("button");
+b.className="danger";
+b.textContent="Delete";
+b.onclick=()=>deleteStudent(d.id,s.name||"Student");
+td.appendChild(b);
+tr.appendChild(td);
+
+body.appendChild(tr);
+count++;
+});
+
+if(!count)body.innerHTML="<tr><td colspan='7'>कोई Student Profile नहीं मिली।</td></tr>";
+}catch(e){body.innerHTML="<tr><td colspan='7'>"+escapeHTML(e.message)+"</td></tr>"}
+}
+
+async function deleteStudent(id,name){
+if(!confirm("क्या आप "+name+" का Student Firestore Profile Delete करना चाहते हैं?"))return;
+try{
+await db.collection("students").doc(id).delete();
+alert("Student Profile Deleted!");
+await loadStudents();await refreshDashboard();
+}catch(e){alert("Delete Error: "+e.message)}
+}
+
+/* SUBJECT OPTIONS & MANAGERS */
+async function loadSubjectOptionsFor(classId,subjectId){
+const cls=document.getElementById(classId).value;
+const select=document.getElementById(subjectId);
+if(!select)return;
+
+select.innerHTML='<option value="">Select Subject</option>';
+if(!cls)return;
+
+let list=[
+...defaults,
+"Science - Physics","Science - Chemistry","Science - Biology",
+"SST - History","SST - Geography","SST - Economics","SST - Polity"
+];
+
+try{
+const snap=await db.collection("subjects").where("classNo","==",cls).get();
+snap.forEach(d=>{
+const n=d.data().name;
+if(n&&!list.includes(n))list.push(n);
+});
+}catch(e){}
+
+list.forEach(n=>{
+const op=document.createElement("option");
+op.value=n;
+op.textContent=n;
+select.appendChild(op);
+});
+}
+
+async function loadClassSubjectsManager(){
+const cls=document.getElementById("manageClassSelect").value;
+document.getElementById("currentClassTitle").textContent="Subjects for "+cls;
+const box=document.getElementById("classSubjectsList");
+box.textContent="Loading...";
+
+try{
+const snap=await db.collection("subjects").where("classNo","==",cls).get();
+let html="<table><thead><tr><th>Subject</th><th>Action</th></tr></thead><tbody>";
+
+defaults.forEach(n=>{
+html+=`<tr><td>${escapeHTML(n)}</td><td>Default</td></tr>`;
+});
+
+snap.forEach(d=>{
+html+=`<tr><td>${escapeHTML(d.data().name)}</td><td><button class="danger" onclick="deleteClassSubject('${d.id}')">Delete</button></td></tr>`;
+});
+
+box.innerHTML=html+"</tbody></table>";
+}catch(e){box.textContent=e.message}
+}
+
+async function addClassSubject(){
+const cls=document.getElementById("manageClassSelect").value;
+const name=document.getElementById("newSubjectName").value.trim();
+if(!name)return alert("Subject Name लिखें");
+
+try{
+await db.collection("subjects").add({
+classNo:cls,name,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+document.getElementById("newSubjectName").value="";
+await loadClassSubjectsManager();
+}catch(e){alert(e.message)}
+}
+
+async function deleteClassSubject(id){
+if(!confirm("Subject Delete करें?"))return;
+try{
+await db.collection("subjects").doc(id).delete();
+await loadClassSubjectsManager();
+}catch(e){alert(e.message)}
+}
+
+/* CLASS & CHAPTER NAVIGATION */
+function openClassSubjects(cls){
+currentActiveContext.class=cls;
+hideClassViews();
+document.getElementById("classSubjectView").style.display="block";
+document.getElementById("selectedClassTitle").textContent=cls+" - Subjects";
+const grid=document.getElementById("classSubjectsGrid");
+grid.innerHTML="";
+
+defaults.concat(subCategoryMapping.Science.map(s=>"Science - "+s)).forEach(n=>{
+const div=document.createElement("div");
+div.className="subject-card";
+div.innerHTML=`<h3>📁 ${n}</h3>`;
+div.onclick=()=>handleSubjectClick(n);
+grid.appendChild(div);
+});
+}
+
+function hideClassViews(){
+["classesListContainer","classSubjectView","subSubjectsView","chaptersListView","subjectCategoriesView","subjectContentListView"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+}
+
+function backToClasses(){hideClassViews();document.getElementById("classesListContainer").style.display="block";}
+function backToMainSubjects(){hideClassViews();document.getElementById("classSubjectView").style.display="block";}
+function backToSubjectSelection(){
+hideClassViews();
+document.getElementById(subCategoryMapping[currentActiveContext.subject]?"subSubjectsView":"classSubjectView").style.display="block";
+}
+function backToChapters(){hideClassViews();document.getElementById("chaptersListView").style.display="block";}
+function backToCategories(){hideClassViews();document.getElementById("subjectCategoriesView").style.display="block";}
+
+function handleSubjectClick(name){
+currentActiveContext.subject=name;
+openChaptersList(name);
+}
+
+async function openChaptersList(name){
+currentActiveContext.subSubject="";
+hideClassViews();
+document.getElementById("chaptersListView").style.display="block";
+document.getElementById("selectedSubjectHeaderTitle").textContent=currentActiveContext.class+" > "+name+" - Chapters";
+await loadChaptersFromFirestore();
+}
+
+function effectiveSubject(){
+return currentActiveContext.subject;
+}
+
+async function loadChaptersFromFirestore(){
+const grid=document.getElementById("chaptersGrid");
+grid.textContent="Loading...";
+try{
+const snap=await db.collection("chapters").where("classNo","==",currentActiveContext.class).where("subject","==",effectiveSubject()).get();
+grid.innerHTML="";
+
+snap.forEach(d=>{
+const data=d.data();
+const div=document.createElement("div");
+div.className="quick-card";
+div.innerHTML=`<h3>📖 ${escapeHTML(data.name)}</h3>`;
+const open=document.createElement("button");
+open.textContent="Open Chapter";
+open.onclick=()=>openChapterCategories(data.name);
+div.appendChild(open);
+
+const del=document.createElement("button");
+del.className="danger";
+del.textContent="Delete";
+del.onclick=()=>deleteChapter(d.id);
+div.appendChild(del);
+grid.appendChild(div);
+});
+if(snap.empty)grid.textContent="अभी कोई Chapter नहीं जोड़ा गया है।";
+}catch(e){grid.textContent=e.message}
+}
+
+async function addNewChapter(){
+const name=document.getElementById("newChapterName").value.trim();
+if(!name)return alert("Chapter का नाम लिखें");
+try{
+await db.collection("chapters").add({
+classNo:currentActiveContext.class,
+subject:effectiveSubject(),
+name,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+document.getElementById("newChapterName").value="";
+await loadChaptersFromFirestore();
+}catch(e){alert(e.message)}
+}
+
+async function deleteChapter(id){
+if(!confirm("Chapter Delete करें?"))return;
+try{
+await db.collection("chapters").doc(id).delete();
+await loadChaptersFromFirestore();
+}catch(e){alert(e.message)}
+}
+
+function openChapterCategories(name){
+currentActiveContext.chapter=name;
+hideClassViews();
+document.getElementById("subjectCategoriesView").style.display="block";
+document.getElementById("selectedChapterTitle").textContent=name+" - Categories";
+}
+
+async function openSubjectContentList(type){
+hideClassViews();
+document.getElementById("subjectContentListView").style.display="block";
+document.getElementById("selectedCategoryTitle").textContent=currentActiveContext.chapter+" > "+type;
+const body=document.getElementById("categoryItemsTable");
+body.innerHTML="<tr><td colspan='3'>Loading...</td></tr>";
+
+try{
+const snap=await db.collection("content")
+.where("classNo","==",currentActiveContext.class)
+.where("subject","==",effectiveSubject())
+.where("chapter","==",currentActiveContext.chapter)
+.where("type","==",type).get();
+
+body.innerHTML="";
+snap.forEach(d=>{
+const item=d.data();
+const tr=document.createElement("tr");
+const td=document.createElement("td");
+td.textContent=item.title||"-";
+tr.appendChild(td);
+
+const ty=document.createElement("td");
+ty.textContent=item.type||"-";
+tr.appendChild(ty);
+
+const ac=document.createElement("td");
+if(item.fileURL||item.url){
+const a=document.createElement("a");
+a.href=item.fileURL||item.url;
+a.target="_blank";a.rel="noopener";a.textContent="Open ";
+ac.appendChild(a);
+}
+const b=document.createElement("button");
+b.className="danger";b.textContent="Delete";
+b.onclick=()=>deleteCategoryItem(d.id,type);
+ac.appendChild(b);tr.appendChild(ac);body.appendChild(tr);
+});
+
+if(snap.empty)body.innerHTML="<tr><td colspan='3'>कोई Content नहीं मिला।</td></tr>";
+}catch(e){body.innerHTML="<tr><td colspan='3'>"+escapeHTML(e.message)+"</td></tr>"}
+}
+
+async function deleteCategoryItem(id,type){
+if(!confirm("इस Content को Delete करें?"))return;
+try{
+await db.collection("content").doc(id).delete();
+await openSubjectContentList(type);
+await refreshDashboard();
+}catch(e){alert(e.message)}
+}
+
+/* QUIZ */
+async function initQuizDropdowns(){
+await loadSubjectOptionsFor("quizClass","quizSubject");
+await loadQuizChapters();
+}
+async function onQuizClassChange(){
+await loadSubjectOptionsFor("quizClass","quizSubject");
+await loadQuizChapters();
+}
+async function loadQuizChapters(){
+const cls=document.getElementById("quizClass").value;
+const sub=document.getElementById("quizSubject").value;
+const select=document.getElementById("quizChapter");
+select.innerHTML='<option value="">Select Chapter</option>';
+if(!cls||!sub)return;
+
+try{
+const snap=await db.collection("chapters").where("classNo","==",cls).where("subject","==",sub).get();
+snap.forEach(d=>{
+const op=document.createElement("option");
+op.value=d.data().name;op.textContent=d.data().name;
+select.appendChild(op);
+});
+}catch(e){console.error(e)}
+}
+
+function addQuestion(){
+questionNumber++;
+const div=document.createElement("div");
+div.className="question-box";
+div.innerHTML=`
+<h3>Question ${questionNumber}</h3>
+<input class="q" placeholder="Question लिखें">
+<input class="o1" placeholder="Option A">
+<input class="o2" placeholder="Option B">
+<input class="o3" placeholder="Option C">
+<input class="o4" placeholder="Option D">
+<label>Correct Answer</label>
+<select class="answer"><option>A</option><option>B</option><option>C</option><option>D</option></select>`;
+document.getElementById("questions").appendChild(div);
+}
+
+async function saveQuiz(){
+const cls=document.getElementById("quizClass").value;
+const subject=document.getElementById("quizSubject").value;
+const chapter=document.getElementById("quizChapter").value;
+const title=document.getElementById("quizTitle").value.trim();
+const msg=document.getElementById("quizMessage");
+const blocks=[...document.querySelectorAll("#questions .question-box")];
+
+if(!subject||!chapter||!title||!blocks.length){
+msg.textContent="Subject, Chapter, Title और प्रश्न भरें";return;
+}
+
+const questions=blocks.map(b=>({
+question:b.querySelector(".q").value.trim(),
+options:["o1","o2","o3","o4"].map(c=>b.querySelector("."+c).value.trim()),
+answer:b.querySelector(".answer").value
+}));
+
+if(questions.some(q=>!q.question||q.options.some(o=>!o))){
+msg.textContent="सभी Questions और Options भरें";return;
+}
+
+try{
+msg.textContent="Saving Quiz...";
+await db.collection("content").add({
+type:"Quiz",classNo:cls,subject,chapter,title,questions,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+msg.textContent="Quiz Saved Successfully!";
+document.getElementById("quizTitle").value="";
+document.getElementById("questions").innerHTML="";
+document.getElementById("quizChapter").value="";
+questionNumber=0;
+await refreshDashboard();await loadContent();
+}catch(e){msg.textContent=e.message}
+}
+
+/* NOTES AND TESTS */
+async function uploadFile(type){
+const prefix=type==="Notes"?"notes":"test";
+const cls=document.getElementById(prefix+"Class").value;
+const subject=document.getElementById(prefix+"Subject").value;
+const title=document.getElementById(prefix+"Title").value.trim();
+const chapter=document.getElementById(prefix+"Chapter").value.trim();
+const url=document.getElementById(prefix+"URL").value.trim();
+const msg=document.getElementById(prefix+"Message");
+
+if(!subject||!title||!url){msg.textContent="सभी जानकारी भरें और PDF लिंक डालें।";return}
+if(!/^https?:\/\//i.test(url)){msg.textContent="सही PDF URL डालें।";return}
+
+try{
+msg.textContent="Saving...";
+await db.collection("content").add({
+type,classNo:cls,subject,title,chapter,fileURL:url,url,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+msg.textContent="PDF Link Successfully Saved!";
+document.getElementById(prefix+"Title").value="";
+document.getElementById(prefix+"URL").value="";
+await refreshDashboard();await loadContent();
+}catch(e){msg.textContent="Error: "+e.message}
+}
+
+/* LECTURES */
+async function uploadLecture(){
+const cls=document.getElementById("lectureClass").value;
+const subject=document.getElementById("lectureSubject").value;
+const title=document.getElementById("lectureTitle").value.trim();
+const url=document.getElementById("lectureURL").value.trim();
+const chapter=document.getElementById("lectureChapter").value.trim();
+const msg=document.getElementById("lectureMessage");
+
+if(!subject||!title||!url){msg.textContent="सभी जानकारी भरें";return}
+if(!/^https?:\/\//i.test(url)){msg.textContent="सही YouTube URL डालें";return}
+
+try{
+await db.collection("content").add({
+type:"Lecture",classNo:cls,subject,title,url,chapter,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+msg.textContent="Lecture Saved Successfully!";
+document.getElementById("lectureTitle").value="";
+document.getElementById("lectureURL").value="";
+await refreshDashboard();await loadContent();
+}catch(e){msg.textContent=e.message}
+}
+
+/* ALL CONTENT */
+async function loadContent(){
+const body=document.getElementById("contentTable");
+const filter=document.getElementById("filterClass").value;
+body.innerHTML="<tr><td colspan='5'>Loading...</td></tr>";
+
+try{
+const snap=await db.collection("content").get();
+body.innerHTML="";
+let count=0;
+
+snap.forEach(d=>{
+const item=d.data();
+if(filter&&item.classNo!==filter)return;
+
+const tr=document.createElement("tr");
+[item.title,item.type,item.classNo,item.subject].forEach(v=>{
+const td=document.createElement("td");td.textContent=v||"-";tr.appendChild(td);
+});
+
+const td=document.createElement("td");
+if(item.fileURL||item.url){
+const a=document.createElement("a");
+a.href=item.fileURL||item.url;a.target="_blank";a.rel="noopener";a.textContent="Open ";
+td.appendChild(a);
+}
+const b=document.createElement("button");
+b.className="danger";b.textContent="Delete";
+b.onclick=()=>deleteContent(d.id,item);
+td.appendChild(b);tr.appendChild(td);body.appendChild(tr);count++;
+});
+
+if(!count)body.innerHTML="<tr><td colspan='5'>अभी कोई Content नहीं है।</td></tr>";
+}catch(e){body.innerHTML="<tr><td colspan='5'>"+escapeHTML(e.message)+"</td></tr>"}
+}
+
+async function deleteContent(id,item){
+if(!confirm("क्या आप इस Content को Delete करना चाहते हैं?"))return;
+try{
+await db.collection("content").doc(id).delete();
+alert("Content Deleted!");
+await loadContent();await refreshDashboard();
+}catch(e){alert(e.message)}
+}
+
+/* DASHBOARD COUNTS */
+async function refreshDashboard(){
+try{
+const [students,content]=await Promise.all([
+db.collection("students").get(),
+db.collection("content").get()
+]);
+
+document.getElementById("studentCount").textContent=students.size;
+let notes=0,lectures=0,quizzes=0,tests=0;
+
+content.forEach(d=>{
+const type=d.data().type;
+if(type==="Notes")notes++;
+if(type==="Lecture")lectures++;
+if(type==="Quiz")quizzes++;
+if(type==="Test")tests++;
+});
+
+document.getElementById("noteCount").textContent=notes;
+document.getElementById("lectureCount").textContent=lectures;
+document.getElementById("quizCount").textContent=quizzes;
+document.getElementById("testCount").textContent=tests;
+}catch(e){console.error("Dashboard Error",e)}
+}
+
+/* HTML SAFETY */
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - RAJ YDV EDUCATION</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { background: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 40px; }
+
+  /* TOP BAR */
+  .top-bar {
+    background: linear-gradient(90deg, #e0f2fe 0%, #ffffff 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f172a;
+    text-decoration: none;
+  }
+  .top-bar h2 { font-size: 19px; color: #0f172a; }
+
+  /* Logout Button in Top Bar */
+  .logout-btn-top {
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+  .logout-btn-top:hover { background: #fee2e2; }
+
+  .container { max-width: 550px; margin: 20px auto; padding: 0 16px; }
+
+  /* GRADIENT PROFILE BANNER */
+  .profile-banner {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    border-radius: 20px;
+    padding: 24px 20px 30px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+    margin-bottom: 24px;
+  }
+  .profile-banner h3 { font-size: 20px; margin-bottom: 4px; }
+  .profile-banner p { font-size: 13px; opacity: 0.9; margin-bottom: 22px; }
+
+  .avatar-wrapper {
+    position: relative;
+    width: 115px;
+    height: 115px;
+    margin: 0 auto;
+  }
+  .avatar-wrapper img {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    background: #e2e8f0;
+  }
+  .edit-photo-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #38bdf8;
+    border: 2px solid #ffffff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  }
+  #photoInput { display: none; }
+
+  /* FORM SECTION */
+  .section-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 14px; }
+
+  .input-group {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .input-group span.icon { font-size: 18px; color: #2563eb; }
+  .input-group input, .input-group select {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 15px;
+    color: #1e293b;
+    background: transparent;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* PASSWORD TOGGLE */
+  .password-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .password-toggle-row label { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+  .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background-color: #cbd5e1; transition: .3s; border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute; content: ""; height: 20px; width: 20px;
+    left: 3px; bottom: 3px; background-color: white;
+    transition: .3s; border-radius: 50%;
+  }
+  input:checked + .slider { background-color: #0ea5e9; }
+  input:checked + .slider:before { transform: translateX(22px); }
+
+  #passwordFields { display: none; }
+
+  /* SAVE BUTTON */
+  .save-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+    transition: opacity 0.2s;
+  }
+  .save-btn:hover { opacity: 0.92; }
+
+  .status-msg { text-align: center; font-size: 14px; margin-top: 12px; font-weight: 600; color: #16a34a; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR WITH BACK & LOGOUT -->
+<div class="top-bar">
+  <div class="top-left">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h2>Profile</h2>
+  </div>
+  <button class="logout-btn-top" onclick="logoutStudent()">
+    🚪 Logout
+  </button>
+</div>
+
+<div class="container">
+
+  <!-- GRADIENT HEADER CARD -->
+  <div class="profile-banner">
+    <h3>Edit Profile</h3>
+    <p>Make it look perfect — update your details</p>
+
+    <div class="avatar-wrapper">
+      <img id="profilePreview" src="https://placehold.co/150x150?text=User" alt="Student Photo">
+      <label for="photoInput" class="edit-photo-btn" title="Change Photo">✏️</label>
+      <input type="file" id="photoInput" accept="image/*">
+    </div>
+  </div>
+
+  <!-- DETAILS FORM -->
+  <div class="section-title">Your details</div>
+
+  <div class="input-group">
+    <span class="icon">👤</span>
+    <input type="text" id="stuName" placeholder="Full Name">
+  </div>
+
+  <div class="input-group">
+    <span class="icon">📞</span>
+    <input type="tel" id="stuMobile" placeholder="Mobile Number">
+  </div>
+
+  <div class="input-group">
+    <span class="icon">✉️</span>
+    <input type="email" id="stuEmail" placeholder="Email Address">
+  </div>
+
+  <div class="input-group">
+    <span class="icon">🎓</span>
+    <select id="stuClass">
+      <option value="Class 6">Class 6</option>
+      <option value="Class 7">Class 7</option>
+      <option value="Class 8">Class 8</option>
+      <option value="Class 9">Class 9</option>
+      <option value="Class 10">Class 10</option>
+    </select>
+  </div>
+
+  <div class="row-2">
+    <div class="input-group">
+      <span class="icon">📍</span>
+      <select id="stuState">
+        <option value="Bihar">Bihar</option>
+        <option value="Uttar Pradesh">Uttar Pradesh</option>
+        <option value="Jharkhand">Jharkhand</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <span class="icon">📍</span>
+      <input type="text" id="stuDistrict" placeholder="District (e.g. Khagaria)">
+    </div>
+  </div>
+
+  <!-- UPDATE PASSWORD TOGGLE -->
+  <div class="password-toggle-row">
+    <label for="pwdSwitch">Update Password</label>
+    <label class="switch">
+      <input type="checkbox" id="pwdSwitch" onchange="togglePasswordFields()">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div id="passwordFields">
+    <div class="input-group">
+      <span class="icon">🔒</span>
+      <input type="password" id="oldPassword" placeholder="Old password">
+    </div>
+    <div class="input-group">
+      <span class="icon">🔒</span>
+      <input type="password" id="newPassword" placeholder="New password">
+    </div>
+  </div>
+
+  <button class="save-btn" onclick="saveStudentProfile()">Save Changes</button>
+  <p class="status-msg" id="statusMsg"></p>
+
+</div>
+
+<!-- FIREBASE SDK (Compat v10) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+  authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+  projectId: "rajydveducation-b4ea4",
+  storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+  messagingSenderId: "737507088855",
+  appId: "1:737507088855:web:36026fbaba7d52c0285392",
+  measurementId: "G-CTZLNK16VF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let currentSavedPassword = "";
+let currentStudentId = null;
+
+function togglePasswordFields() {
+  const isChecked = document.getElementById("pwdSwitch").checked;
+  document.getElementById("passwordFields").style.display = isChecked ? "block" : "none";
+}
+
+// Logout Function
+function logoutStudent() {
+  if (confirm("क्या आप सच में लॉग आउट करना चाहते हैं?")) {
+    localStorage.removeItem("currentStudent");
+    window.location.href = "index.html";
+  }
+}
+
+// Instant Photo Compression & Resize
+document.getElementById("photoInput").addEventListener("change", function() {
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 300;
+      const MAX_HEIGHT = 300;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById("profilePreview").src = compressedDataUrl;
+    };
+  };
+  reader.readAsDataURL(file);
+});
+
+// Load Student Data from localStorage (currentStudent)
+window.addEventListener("DOMContentLoaded", async () => {
+  const savedStudentStr = localStorage.getItem("currentStudent");
+  
+  if (savedStudentStr) {
+    const student = JSON.parse(savedStudentStr);
+    currentStudentId = student.id;
+    
+    document.getElementById("stuName").value = student.name || "";
+    document.getElementById("stuMobile").value = student.mobile || "";
+    document.getElementById("stuEmail").value = student.email || "";
+    if (student.studentClass || student.classNo) {
+      document.getElementById("stuClass").value = student.studentClass || student.classNo;
+    }
+    if (student.state) document.getElementById("stuState").value = student.state;
+    document.getElementById("stuDistrict").value = student.district || "";
+    if (student.photoURL) document.getElementById("profilePreview").src = student.photoURL;
+    currentSavedPassword = student.password || "";
+  }
+});
+
+// Save Updated Profile to Firestore and LocalStorage
+async function saveStudentProfile() {
+  const name = document.getElementById("stuName").value.trim();
+  const mobile = document.getElementById("stuMobile").value.trim();
+  const email = document.getElementById("stuEmail").value.trim();
+  const studentClass = document.getElementById("stuClass").value;
+  const state = document.getElementById("stuState").value;
+  const district = document.getElementById("stuDistrict").value.trim();
+  const msg = document.getElementById("statusMsg");
+
+  if (!name || !mobile) {
+    alert("कृपया अपना नाम और मोबाइल नंबर जरूर भरें।");
+    return;
+  }
+
+  const updatePwd = document.getElementById("pwdSwitch").checked;
+  const oldPwd = document.getElementById("oldPassword").value;
+  const newPwd = document.getElementById("newPassword").value;
+
+  if (updatePwd) {
+    if (!oldPwd || !newPwd) {
+      alert("कृपया Old Password और New Password दोनों भरें।");
+      return;
+    }
+    if (currentSavedPassword && oldPwd !== currentSavedPassword) {
+      alert("पुराना पासवर्ड (Old Password) गलत है!");
+      return;
+    }
+  }
+
+  try {
+    msg.style.color = "#2563eb";
+    msg.textContent = "Saving changes...";
+
+    const photoURL = document.getElementById("profilePreview").src;
+
+    const updateData = {
+      name: name,
+      mobile: mobile,
+      email: email,
+      studentClass: studentClass,
+      classNo: studentClass,
+      state: state,
+      district: district,
+      photoURL: photoURL,
+      updatedAt: new Date().toISOString()
+    };
+
+    if (updatePwd && newPwd) {
+      updateData.password = newPwd;
+      currentSavedPassword = newPwd;
+    }
+
+    if (currentStudentId) {
+      await db.collection("students").doc(currentStudentId).set(updateData, { merge: true });
+      
+      const existingStudent = JSON.parse(localStorage.getItem("currentStudent") || "{}");
+      const updatedStudent = { ...existingStudent, ...updateData, id: currentStudentId };
+      localStorage.setItem("currentStudent", JSON.stringify(updatedStudent));
+    }
+
+    msg.style.color = "#16a34a";
+    msg.textContent = "Profile Updated Successfully!";
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1000);
+
+  } catch (err) {
+    msg.style.color = "#dc2626";
+    msg.textContent = "Error: " + err.message;
+  }
+}
+</script>
+
+</body>
+</html>

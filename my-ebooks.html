@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My eBooks - RAJ YDV EDUCATION</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  html, body { width: 100%; min-height: 100vh; background: #f8fafc; color: #1e293b; display: flex; flex-direction: column; }
+
+  .top-bar { background: #ffffff; padding: 14px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+  .back-btn { width: 38px; height: 38px; border-radius: 50%; background: #f1f5f9; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: bold; color: #0f172a; text-decoration: none; }
+  .top-bar h2 { font-size: 19px; font-weight: 800; color: #0f172a; }
+
+  .container { max-width: 600px; width: 100%; margin: 0 auto; padding: 20px 16px; flex: 1; display: flex; flex-direction: column; gap: 15px; }
+
+  /* SUBJECT FOLDERS GRID */
+  .subjects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .subject-card { background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+  .subject-card:hover { border-color: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37,99,235,0.1); }
+  .subject-icon { font-size: 24px; }
+  .subject-name { font-size: 15px; font-weight: 700; color: #0f172a; }
+
+  /* EBOOK ITEM CARDS */
+  .content-list { display: flex; flex-direction: column; gap: 12px; }
+  .item-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.02); gap: 10px; }
+  .item-info { min-width: 0; flex: 1; }
+  .item-info h4 { font-size: 16px; color: #0f172a; margin-bottom: 4px; font-weight: 700; overflow-wrap: anywhere; }
+  .item-info p { font-size: 13px; color: #64748b; }
+  
+  .btn-group { display: flex; gap: 8px; flex-shrink: 0; }
+  .action-btn { background: #2563eb; color: white; padding: 8px 12px; border-radius: 10px; border: none; cursor: pointer; font-size: 12.5px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; }
+  .action-btn:hover { background: #1d4ed8; }
+  .download-btn-card { background: #10b981; }
+  .download-btn-card:hover { background: #059669; }
+
+  /* PDF VIEWER MODAL */
+  #pdfModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); display: none; flex-direction: column; z-index: 1000; }
+  .modal-header { background: #0f172a; color: white; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .modal-header h3 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+  .modal-actions { display: flex; align-items: center; gap: 8px; }
+  .modal-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .modal-btn:hover { background: #475569; }
+  .download-modal-btn { background: #10b981; }
+  .download-modal-btn:hover { background: #059669; }
+  .close-btn-custom { background: #ef4444; }
+  .close-btn-custom:hover { background: #dc2626; }
+  .modal-body { flex: 1; width: 100%; background: #ffffff; }
+  .modal-body iframe { width: 100%; height: 100%; border: none; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="#" onclick="handleBack(event)" class="back-btn" id="backBtn">←</a>
+  <h2 id="pageTitle">My eBooks</h2>
+</div>
+
+<div class="container">
+  
+  <!-- SUBJECT FOLDERS VIEW (Default) -->
+  <div id="subjectView">
+    <p style="font-size: 14px; color: #64748b; margin-bottom: 12px; font-weight: 600;">विषय चुनें (Select Subject):</p>
+    <div class="subjects-grid">
+      <div class="subject-card" onclick="selectSubject('Maths')"><span class="subject-icon">📐</span><span class="subject-name">Maths</span></div>
+      <div class="subject-card" onclick="selectSubject('Hindi')"><span class="subject-icon">🇮🇳</span><span class="subject-name">Hindi</span></div>
+      <div class="subject-card" onclick="selectSubject('Physics')"><span class="subject-icon">⚡</span><span class="subject-name">Physics</span></div>
+      <div class="subject-card" onclick="selectSubject('Chemistry')"><span class="subject-icon">🧪</span><span class="subject-name">Chemistry</span></div>
+      <div class="subject-card" onclick="selectSubject('Biology')"><span class="subject-icon">🧬</span><span class="subject-name">Biology</span></div>
+      <div class="subject-card" onclick="selectSubject('English')"><span class="subject-icon">📖</span><span class="subject-name">English</span></div>
+      <div class="subject-card" onclick="selectSubject('History')"><span class="subject-icon">🏛️</span><span class="subject-name">History</span></div>
+      <div class="subject-card" onclick="selectSubject('Geography')"><span class="subject-icon">🌍</span><span class="subject-name">Geography</span></div>
+      <div class="subject-card" onclick="selectSubject('Economics')"><span class="subject-icon">📊</span><span class="subject-name">Economics</span></div>
+      <div class="subject-card" onclick="selectSubject('Polity')"><span class="subject-icon">⚖️</span><span class="subject-name">Polity</span></div>
+      <div class="subject-card" onclick="selectSubject('Sanskrit')"><span class="subject-icon">📜</span><span class="subject-name">Sanskrit</span></div>
+    </div>
+  </div>
+
+  <!-- EBOOK LIST VIEW (Hidden initially) -->
+  <div id="ebooksView" style="display: none;">
+    <div id="itemsContainer" class="content-list">
+      <p style="text-align: center; color: #64748b; padding: 20px;">लोड हो रहा है...</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- IN-PAGE PDF VIEWER MODAL -->
+<div id="pdfModal">
+  <div class="modal-header">
+    <h3 id="modalTitle">PDF Viewer</h3>
+    <div class="modal-actions">
+      <a id="downloadBtn" href="#" class="modal-btn download-modal-btn">📥 Download</a>
+      <button class="modal-btn" onclick="toggleFullScreen()">⛶ Full Screen</button>
+      <button class="modal-btn close-btn-custom" onclick="closePdfModal()">✕ Close</button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <iframe id="pdfIframe" src=""></iframe>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+  authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+  projectId: "rajydveducation-b4ea4",
+  storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+  messagingSenderId: "737507088855",
+  appId: "1:737507088855:web:36026fbaba7d52c0285392",
+  measurementId: "G-CTZLNK16VF"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let studentClass = "Class 9";
+const savedStudentStr = localStorage.getItem("currentStudent");
+if (savedStudentStr) {
+  try {
+    const student = JSON.parse(savedStudentStr);
+    studentClass = student.studentClass || student.classNo || "Class 9";
+  } catch(e) {}
+}
+
+let currentSubject = "";
+
+async function selectSubject(subject) {
+  currentSubject = subject;
+  document.getElementById("subjectView").style.display = "none";
+  document.getElementById("ebooksView").style.display = "block";
+  document.getElementById("pageTitle").textContent = subject + " eBooks";
+
+  const container = document.getElementById("itemsContainer");
+  container.innerHTML = "<p style='text-align: center; color: #64748b; padding: 20px;'>लोड हो रहा है...</p>";
+
+  try {
+    const snap = await db.collection("my_ebooks")
+      .where("classNo", "==", studentClass)
+      .where("subject", "==", subject)
+      .get();
+
+    container.innerHTML = "";
+
+    if (snap.empty) {
+      container.innerHTML = `<p style="text-align: center; color: #64748b; padding: 30px;">अभी ${subject} में कोई ई-बुक उपलब्ध नहीं है।</p>`;
+      return;
+    }
+
+    let ebooks = [];
+    snap.forEach(doc => {
+      ebooks.push(doc.data());
+    });
+
+    // ✨ चैप्टर्स को सही क्रम (Series: 1, 2, 3 ... 10, 11, 12, 13) में ऑटोमैटिक सॉर्ट करना
+    ebooks.sort((a, b) => {
+      let numA = Number(a.chapterNo) || extractChapterNumber(a.title) || 0;
+      let numB = Number(b.chapterNo) || extractChapterNumber(b.title) || 0;
+      return numA - numB;
+    });
+
+    ebooks.forEach(item => {
+      const rawUrl = item.pdfUrl || "";
+      const links = getDriveLinks(rawUrl);
+      
+      const div = document.createElement("div");
+      div.className = "item-card";
+      div.innerHTML = `
+        <div class="item-info">
+          <h4>📖 ${escapeHTML(item.title)}</h4>
+          <p>विषय: ${escapeHTML(item.subject)} | क्लास: ${escapeHTML(item.classNo)}</p>
+        </div>
+        <div class="btn-group">
+          <button class="action-btn" onclick="openPdfModal('${escapeHTML(links.embed)}', '${escapeHTML(links.download)}', '${escapeHTML(item.title)}')">👁️ View</button>
+          <a href="${escapeHTML(links.download)}" class="action-btn download-btn-card" target="_blank">📥 Download</a>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+  } catch (e) {
+    container.innerHTML = `<p style="text-align: center; color: #dc2626; padding: 20px;">Error: ${escapeHTML(e.message)}</p>`;
+  }
+}
+
+// टाइटल से चैप्टर नंबर निकालने के लिए मददगार फंक्शन (जैसे 'Maths Chapter 3' में से 3 ढूंढ लेगा)
+function extractChapterNumber(title) {
+  if (!title) return 0;
+  const match = title.match(/(?:chapter|चैप्टर|पाठ)\s*(\d+)/i) || title.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+function handleBack(event) {
+  const ebooksView = document.getElementById("ebooksView");
+  if (ebooksView.style.display === "block") {
+    event.preventDefault();
+    ebooksView.style.display = "none";
+    document.getElementById("subjectView").style.display = "block";
+    document.getElementById("pageTitle").textContent = "My eBooks";
+    currentSubject = "";
+  } else {
+    window.location.href = "notes.html";
+  }
+}
+
+function getDriveLinks(url) {
+  if (!url) return { embed: '#', download: '#' };
+  let fileId = '';
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    fileId = match[1];
+  } else {
+    const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (idMatch && idMatch[1]) fileId = idMatch[1];
+  }
+
+  if (fileId) {
+    return {
+      embed: `https://drive.google.com/file/d/${fileId}/preview`,
+      download: `https://drive.google.com/uc?export=download&id=${fileId}`
+    };
+  }
+  return { embed: url, download: url };
+}
+
+function openPdfModal(embedUrl, downloadUrl, title) {
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("pdfIframe").src = embedUrl;
+  document.getElementById("downloadBtn").href = downloadUrl;
+  document.getElementById("pdfModal").style.display = "flex";
+}
+
+function closePdfModal() {
+  document.getElementById("pdfModal").style.display = "none";
+  document.getElementById("pdfIframe").src = "";
+  if (document.fullscreenElement) document.exitFullscreen();
+}
+
+function toggleFullScreen() {
+  const modal = document.getElementById("pdfModal");
+  if (!document.fullscreenElement) {
+    if (modal.requestFullscreen) modal.requestFullscreen();
+    else if (modal.webkitRequestFullscreen) modal.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+  }
+}
+
+function escapeHTML(str) {
+  return String(str ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+</script>
+
+</body>
+</html>

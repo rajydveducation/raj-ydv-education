@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDFs - RAJ YDV EDUCATION</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP HEADER BAR */
+  .top-bar {
+    background: #ffffff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f172a;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .back-btn:hover { background: #e2e8f0; }
+  .top-bar h2 { font-size: 19px; font-weight: 800; color: #0f172a; }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* BANNER */
+  .pdf-banner {
+    background: linear-gradient(135deg, #16a34a 0%, #0d9488 100%);
+    border-radius: 24px;
+    padding: 28px 24px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(22, 163, 74, 0.25);
+  }
+  .pdf-banner h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  .pdf-banner p { font-size: 15px; opacity: 0.95; font-weight: 500; }
+
+  /* PDF CARDS CONTAINER */
+  #pdfListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* PDF CARD */
+  .pdf-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+  .card-left { display: flex; align-items: center; gap: 18px; flex: 1; }
+  .card-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .card-text h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .card-text p { font-size: 13px; color: #64748b; font-weight: 500; }
+
+  /* ACTION BUTTONS GROUP */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .btn-open {
+    background: #16a34a;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-open:hover { background: #15803d; }
+  
+  .btn-download {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 8px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid #cbd5e1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
+  .btn-download:hover { background: #e2e8f0; color: #0f172a; }
+
+  .loading-text {
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+    margin-top: 30px;
+    font-weight: 600;
+  }
+
+  /* PDF VIEWER MODAL (Inside Website) */
+  #pdfModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    transition: all 0.3s ease;
+  }
+  .modal-content {
+    background: white;
+    width: 100%;
+    max-width: 850px;
+    height: 85vh;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    animation: scaleUp 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  @keyframes scaleUp {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-header {
+    background: #1e293b;
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h3 { font-size: 16px; font-weight: 700; }
+  
+  .modal-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+  }
+  .modal-btn:hover { background: rgba(255,255,255,0.1); }
+
+  .modal-body {
+    flex: 1;
+    width: 100%;
+    background: #e2e8f0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-body iframe {
+    width: 100%;
+    flex: 1;
+    border: none;
+  }
+
+  /* Fullscreen class applied dynamically */
+  .fullscreen-mode {
+    max-width: 100% !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="notes.html" class="back-btn">←</a>
+  <h2>Free PDFs Library</h2>
+</div>
+
+<!-- CONTAINER -->
+<div class="container">
+
+  <!-- BANNER -->
+  <div class="pdf-banner">
+    <h1>Free Study Notes</h1>
+    <p>Read online within the website or download for offline study</p>
+  </div>
+
+  <!-- PDF LIST LOADED FROM FIREBASE -->
+  <div id="pdfListContainer">
+    <div class="loading-text">Loading PDFs from database...</div>
+  </div>
+
+</div>
+
+<!-- EMBEDDED PDF VIEWER MODAL -->
+<div id="pdfModal">
+  <div class="modal-content" id="modalBox">
+    <div class="modal-header">
+      <h3 id="modalPdfTitle">PDF Viewer</h3>
+      <div class="modal-controls">
+        <button class="modal-btn" onclick="toggleFullScreen()" title="Fullscreen">⤢</button>
+        <button class="modal-btn" onclick="closePdfModal()" title="Close">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="loaderText" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #f8fafc; font-weight: 600; color: #64748b; z-index: 10;">
+        Loading PDF, please wait...
+      </div>
+      <iframe id="pdfIframe" src="" onload="hideLoader()"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDdHhM3EFlYRm1A84finrw3tGxOLkVM0XY",
+  authDomain: "rajydveducation-b4ea4.firebaseapp.com",
+  projectId: "rajydveducation-b4ea4",
+  storageBucket: "rajydveducation-b4ea4.firebasestorage.app",
+  messagingSenderId: "737507088855",
+  appId: "1:737507088855:web:36026fbaba7d52c0285392",
+  measurementId: "G-CTZLNK16VF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Fetch Free PDFs from Firestore
+window.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("pdfListContainer");
+
+  db.collection("free_pdfs").get()
+    .then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        container.innerHTML = `<div class="loading-text">No PDFs found in database!</div>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const pdf = doc.data();
+        
+        let viewUrl = pdf.pdfUrl;
+        if (viewUrl.includes("drive.google.com")) {
+          const match = viewUrl.match(/\/d\/(.*?)\//) || viewUrl.match(/id=(.*?)(&|$)/);
+          if (match && match[1]) {
+            viewUrl = `https://drive.google.com/file/d/${match[1]}/preview`;
+          }
+        }
+
+        container.innerHTML += `
+          <div class="pdf-card">
+            <div class="card-left">
+              <div class="card-icon-box">📄</div>
+              <div class="card-text">
+                <h3>${pdf.title}</h3>
+                <p>Class: ${pdf.classNo} &bull; Free Study Material</p>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-open" onclick="openPdfModal('${viewUrl}', '${pdf.title}')">Open</button>
+              <a href="${pdf.pdfUrl}" class="btn-download" target="_blank" download>Download</a>
+            </div>
+          </div>
+        `;
+      });
+    })
+    .catch((error) => {
+      console.error("Error getting documents: ", error);
+      container.innerHTML = `<div class="loading-text" style="color: #dc2626;">Failed to load PDFs. Please check connection.</div>`;
+    });
+});
+
+// Open PDF inside website modal
+function openPdfModal(url, title) {
+  document.getElementById("modalPdfTitle").textContent = title;
+  document.getElementById("loaderText").style.display = "flex";
+  document.getElementById("pdfIframe").src = url;
+  document.getElementById("pdfModal").style.display = "flex";
+}
+
+// Hide loader when iframe is loaded
+function hideLoader() {
+  document.getElementById("loaderText").style.display = "none";
+}
+
+// Toggle Full Screen Mode for Modal
+function toggleFullScreen() {
+  const modalBox = document.getElementById("modalBox");
+  modalBox.classList.toggle("fullscreen-mode");
+}
+
+// Close PDF modal
+function closePdfModal() {
+  document.getElementById("pdfModal").style.display = "none";
+  document.getElementById("pdfIframe").src = "";
+  document.getElementById("modalBox").classList.remove("fullscreen-mode");
+}
+</script>
+
+
+</body>
+</html>
